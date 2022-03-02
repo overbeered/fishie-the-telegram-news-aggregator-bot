@@ -1,11 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace OverbeeredTGNewsAggregatorBot.Server
+namespace OverbeeredTgNewsBot.Server
 {
     public class Startup
     {
@@ -22,9 +29,10 @@ namespace OverbeeredTGNewsAggregatorBot.Server
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OverbeeredTGNewsAggregatorBot.Server", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OverbeeredTgNewsBot.Server", Version = "v1" });
             });
         }
+       
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -34,7 +42,7 @@ namespace OverbeeredTGNewsAggregatorBot.Server
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OverbeeredTGNewsAggregatorBot.Server v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OverbeeredTgNewsBot.Server v1"));
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
