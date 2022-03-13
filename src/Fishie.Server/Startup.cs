@@ -1,9 +1,18 @@
+using Fishie.Core.Repositories;
+using Fishie.Core.Services;
+using Fishie.Database.Context;
+using Fishie.Database.Repositories;
+using Fishie.Server.Providers;
+using Fishie.Services.ChannelService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Fishie.Services.ConnectorService;
 
 namespace Fishie.Server
 {
@@ -24,6 +33,18 @@ namespace Fishie.Server
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fishie.Server", Version = "v1" });
             });
+
+
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                       Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connectionString));
+
+
+            services.AddTransient<IChannelServices, ChannelServices>();
+            services.AddTransient<IChannelRepository, ChannelRepository>();
+            services.AddSingleton<ITelegramServices, TelegramServices>();
+            services.AddConnectors(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

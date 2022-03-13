@@ -6,4 +6,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Database\Fishie.Database.Models\Fishie.Database.Models.csproj" />
+  </ItemGroup>
+
 </Project>
