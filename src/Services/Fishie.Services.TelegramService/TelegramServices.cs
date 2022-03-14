@@ -1,13 +1,13 @@
 ﻿using Fishie.Core.Connectors;
 using Fishie.Core.Services;
+using Microsoft.Extensions.Logging;
 using System;
-using WTelegram;
 using System.Threading.Tasks;
 using TL;
+using WTelegram;
 using CoreModels = Fishie.Core.Models;
-using Microsoft.Extensions.Logging;
 
-namespace Fishie.Services.ConnectorService
+namespace Fishie.Services.TelegramService
 {
     public class TelegramServices : ITelegramServices
     {
@@ -24,6 +24,7 @@ namespace Fishie.Services.ConnectorService
             // make asynchronous
             _client.LoginUserIfNeeded();
         }
+
 
         public async Task<CoreModels.Channel?> SearchChannelAsync(string query)
         {
@@ -57,12 +58,52 @@ namespace Fishie.Services.ConnectorService
 
         }
 
+        public async Task SubscribeAsync(CoreModels.Channel channel)
+        {
+            try
+            {
+                await _client.Channels_JoinChannel(new InputChannel()
+                {
+                    channel_id = channel.Id,
+                    access_hash = channel.AccessHash
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(SubscribeAsync));
+
+                throw new Exception();
+            }
+        }
+
+        public async Task UnsubscribeAsync(CoreModels.Channel channel)
+        {
+            try
+            {
+                await _client.LeaveChat(new InputChannel()
+                {
+                    channel_id = channel.Id,
+                    access_hash = channel.AccessHash
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(UnsubscribeAsync));
+
+                throw new Exception();
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="what"></param>
         /// <returns></returns>
-        private string? Config(string what)
+        private string Config(string what)
         {
             switch (what)
             {
@@ -70,10 +111,10 @@ namespace Fishie.Services.ConnectorService
                 case "api_hash": return _сlientConnector.ApiHash;
                 case "phone_number": return _сlientConnector.PhoneNumber;
                 case "verification_code": Console.Write("Code: "); return Console.ReadLine()!;
-                case "first_name": return _сlientConnector.FirstName;      // if sign-up is required
-                case "last_name": return _сlientConnector.LastName;        // if sign-up is required
-                case "password": return _сlientConnector.Password;     // if user has enabled 2FA
-                default: return null;                  // let WTelegramClient decide the default config
+                case "first_name": return _сlientConnector.FirstName;      
+                case "last_name": return _сlientConnector.LastName;        
+                case "password": return _сlientConnector.Password;     
+                default: return null;
             }
         }
 

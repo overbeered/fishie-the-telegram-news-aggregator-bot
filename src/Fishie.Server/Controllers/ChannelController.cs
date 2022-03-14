@@ -1,6 +1,8 @@
-﻿using Fishie.Core.Services;
+﻿using Fishie.Core.Models;
+using Fishie.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,37 +20,132 @@ namespace Fishie.Server.Controllers
         {
             _channelServices = channelServices;
             _logger = logger;
-        } 
-
-
-        //[HttpGet]
-        //public async Task<IEnumerable<string>> Get()
-        //{
-            
-
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        [HttpPost]
-        public async Task Post([FromBody] string value)
-        {
-            await _channelServices.AddChannelAsync(value);
         }
 
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
+        [HttpPost("AddChannel")]
+        public async Task PostAddChannelAsync([FromBody] string value)
+        {
+            try
+            {
+                await _channelServices.AddChannelAsync(value);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostAddChannelAsync));
+            }
+        }
 
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        [HttpPost("DeleteChannel")]
+        public async Task PostDeleteChannelAsync([FromBody] string value)
+        {
+            try
+            {
+                await _channelServices.DeleteChannelAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostDeleteChannelAsync));
+            }
+        }
+
+        [HttpPost("DeleteChannelById")]
+        public async Task PostDeleteChannelByIdAsync([FromBody] long value)
+        {
+            try
+            {
+                await _channelServices.DeleteChannelByIdAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostDeleteChannelByIdAsync));
+            }
+        }
+
+        [HttpGet("AllChannels")]
+        public async Task<IEnumerable<Channel?>?> GetAllChannelsAsync()
+        {
+            try
+            {
+                return await _channelServices.GetAllChannelsAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(GetAllChannelsAsync));
+            }
+
+            return default;
+        }
+
+        [HttpPost("Channel")]
+        public async Task<Channel?> PostChannelAsync([FromBody] string value)
+        {
+            try
+            {
+                return await _channelServices.GetChannelAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostChannelAsync));
+            }
+
+            return default;
+        }
+
+        [HttpPost("ChannelById")]
+        public async Task<Channel?> PostChannelByIdAsync([FromBody] long value)
+        {
+            try
+            {
+                return await _channelServices.GetChannelByIdAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostChannelByIdAsync));
+            }
+
+            return default;
+        }
+
+        [HttpPost("Subscribe")]
+        public async Task PostSubscribeAsync([FromBody] string value)
+        {
+            try
+            {
+                await _channelServices.SubscribeAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostSubscribeAsync));
+            }
+        }
+
+        [HttpPost("Unsubscribe")]
+        public async Task PostUnsubscribeAsync([FromBody] string value)
+        {
+            try
+            {
+                await _channelServices.UnsubscribeAsync(value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostUnsubscribeAsync));
+            }
+        }
     }
 }

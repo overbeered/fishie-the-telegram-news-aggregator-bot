@@ -20,7 +20,7 @@ namespace Fishie.Core.Repositories
         /// Returns channels
         /// </summary>
         /// <returns>Channels</returns>
-        Task<IEnumerable<Channel?>> GetAllChannelsAsync();
+        Task<IEnumerable<Channel?>?> GetAllChannelsAsync();
 
         /// <summary>
         /// Returns the channel by name

@@ -51,7 +51,6 @@ namespace Fishie.Database.Repositories
             try
             {
                 DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Name == channelName);
-
                 if (channel != null)
                 {
                     _dbContext.Channels!.Remove(channel);
@@ -96,7 +95,7 @@ namespace Fishie.Database.Repositories
             }
         }
 
-        public async Task<IEnumerable<CoreModels.Channel?>> GetAllChannelsAsync()
+        public async Task<IEnumerable<CoreModels.Channel?>?> GetAllChannelsAsync()
         {
             try
             {

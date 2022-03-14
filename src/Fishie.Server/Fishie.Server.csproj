@@ -18,7 +18,7 @@
     <ProjectReference Include="..\Database\Fishie.Database.Repositories\Fishie.Database.Repositories.csproj" />
     <ProjectReference Include="..\Fishie.Core\Fishie.Core.csproj" />
     <ProjectReference Include="..\Services\Fishie.Services.ChannelService\Fishie.Services.ChannelService.csproj" />
-    <ProjectReference Include="..\Services\Fishie.Services.ConnectorService\Fishie.Services.ConnectorService.csproj" />
+    <ProjectReference Include="..\Services\Fishie.Services.TelegramService\Fishie.Services.TelegramService.csproj" />
   </ItemGroup>
 
 </Project>

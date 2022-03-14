@@ -13,23 +13,25 @@ namespace Fishie.Services.ChannelService
     {
         private readonly ILogger<ChannelServices> _logger;
         private readonly IChannelRepository _channelRepository;
-        private readonly ITelegramServices _telegramConnectorServices;
+        private readonly ITelegramServices _telegramServices;
         public ChannelServices(ILogger<ChannelServices> logger,
             IChannelRepository channelRepository,
-            ITelegramServices telegramConnectorServices)
+            ITelegramServices telegramServices)
         {
             _logger = logger;
             _channelRepository = channelRepository;
-            _telegramConnectorServices = telegramConnectorServices;
+            _telegramServices = telegramServices;
         }
 
         public async Task AddChannelAsync(string channelName)
         {
             try
             {
-                Channel? channel = await _telegramConnectorServices.SearchChannelAsync(channelName);
+                Channel? channel = await _telegramServices.SearchChannelAsync(channelName);
 
-                if (channel != null) await _channelRepository.AddChannelAsync(channel);
+                if (channel == null) throw new Exception($"channel {channelName} not found");
+
+                await _channelRepository.AddChannelAsync(channel);
             }
             catch (Exception ex)
             {
@@ -41,29 +43,118 @@ namespace Fishie.Services.ChannelService
             }
         }
 
-        public Task<bool> DeleteChannelAsync(string channelName)
+        public async Task<bool> DeleteChannelAsync(string channelName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _channelRepository.DeleteChannelAsync(channelName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(DeleteChannelAsync));
+
+                throw new Exception();
+            }
         }
 
-        public Task<bool> DeleteChannelByIdAsync(long id)
+        public async Task<bool> DeleteChannelByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _channelRepository.DeleteChannelByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(DeleteChannelByIdAsync));
+
+                throw new Exception();
+            }
         }
 
-        public Task<IEnumerable<Channel?>> GetAllChannelsAsync()
+        public async Task<IEnumerable<Channel?>?> GetAllChannelsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _channelRepository.GetAllChannelsAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(GetAllChannelsAsync));
+
+                throw new Exception();
+            }
         }
 
-        public Task<Channel?> GetChannelAsync(string channelName)
+        public async Task<Channel?> GetChannelAsync(string channelName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _channelRepository.GetChannelAsync(channelName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(GetChannelAsync));
+
+                throw new Exception();
+            }
         }
 
-        public Task<Channel?> GetChannelByIdAsync(long id)
+        public async Task<Channel?> GetChannelByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _channelRepository.GetChannelByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(GetChannelByIdAsync));
+
+                throw new Exception();
+            }
+        }
+
+        public async Task SubscribeAsync(string channelName)
+        {
+            try
+            {
+                var channel =  await _channelRepository.GetChannelAsync(channelName);
+                if (channel != null) await _telegramServices.SubscribeAsync(channel!);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(SubscribeAsync));
+
+                throw new Exception();
+            }
+        }
+
+        public async Task UnsubscribeAsync(string channelName)
+        {
+            try
+            {
+                var channel = await _channelRepository.GetChannelAsync(channelName);
+                if (channel != null) await _telegramServices.UnsubscribeAsync(channel!);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(UnsubscribeAsync));
+
+                throw new Exception();
+            }
         }
     }
 }

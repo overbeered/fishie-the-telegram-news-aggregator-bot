@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
-using Fishie.Services.ConnectorService;
+using Fishie.Services.TelegramService;
 
 namespace Fishie.Server
 {

@@ -17,7 +17,7 @@ namespace Fishie.Core.Services
         /// Returns channels
         /// </summary>
         /// <returns>Channels</returns>
-        Task<IEnumerable<Channel?>> GetAllChannelsAsync();
+        Task<IEnumerable<Channel?>?> GetAllChannelsAsync();
 
         /// <summary>
         /// Returns the channel by name
@@ -46,5 +46,19 @@ namespace Fishie.Core.Services
         /// <param name="id">Channel id</param>
         /// <returns>true - channel deleted, false - channel has not been deleted</returns>
         Task<bool> DeleteChannelByIdAsync(long id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        Task SubscribeAsync(string channelName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        Task UnsubscribeAsync(string channelName);
     }
 }

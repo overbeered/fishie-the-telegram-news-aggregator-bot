@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.ChannelService", "Services\Fishie.Services.ChannelService\Fishie.Services.ChannelService.csproj", "{2B111EE2-6859-4BBC-900F-9BE688AF34EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fishie.Services.ConnectorService", "Services\Fishie.Services.ConnectorService\Fishie.Services.ConnectorService.csproj", "{296E3447-5876-4792-8C51-F41C3733AD64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.TelegramService", "Services\Fishie.Services.TelegramService\Fishie.Services.TelegramService.csproj", "{8BE8121B-9980-4715-B5E1-750F0EF19D03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,10 @@ Global
 		{2B111EE2-6859-4BBC-900F-9BE688AF34EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B111EE2-6859-4BBC-900F-9BE688AF34EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B111EE2-6859-4BBC-900F-9BE688AF34EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{296E3447-5876-4792-8C51-F41C3733AD64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{296E3447-5876-4792-8C51-F41C3733AD64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{296E3447-5876-4792-8C51-F41C3733AD64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{296E3447-5876-4792-8C51-F41C3733AD64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BE8121B-9980-4715-B5E1-750F0EF19D03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE8121B-9980-4715-B5E1-750F0EF19D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BE8121B-9980-4715-B5E1-750F0EF19D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BE8121B-9980-4715-B5E1-750F0EF19D03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,7 +64,7 @@ Global
 		{A64E5BCF-1AC9-478D-B036-CFD66F668CEF} = {7E037F54-F33C-47EC-B5DF-08F5018509F6}
 		{56FEA9F5-7A62-48CE-B07E-E86CD2A79411} = {7E037F54-F33C-47EC-B5DF-08F5018509F6}
 		{2B111EE2-6859-4BBC-900F-9BE688AF34EB} = {9E0C1F97-156C-42B0-A6CC-F67CF2A75E55}
-		{296E3447-5876-4792-8C51-F41C3733AD64} = {9E0C1F97-156C-42B0-A6CC-F67CF2A75E55}
+		{8BE8121B-9980-4715-B5E1-750F0EF19D03} = {9E0C1F97-156C-42B0-A6CC-F67CF2A75E55}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBFCC34F-9950-4B2A-A0A7-8B7A4C5FE38A}
