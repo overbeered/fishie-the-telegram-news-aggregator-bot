@@ -156,5 +156,41 @@ namespace Fishie.Services.ChannelService
                 throw new Exception();
             }
         }
+
+        public async Task<List<string?>?> GetMessagesChannelAsync(string channelName, int count = 5)
+        {
+            try
+            {
+                var channel = await _channelRepository.GetChannelAsync(channelName);
+                if (channel == null) return null;
+
+                return await _telegramServices.GetMessagesChannelAsync(channel!, count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(GetMessagesChannelAsync));
+
+                throw new Exception();
+            }
+        }
+
+        public async Task SendMessagesChannelAsync(string channelName, string message)
+        {
+            try
+            {
+                var channel = await _channelRepository.GetChannelAsync(channelName);
+                if (channel != null) await _telegramServices.SendMessagesChannelAsync(channel!, message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(ChannelServices),
+                    nameof(SendMessagesChannelAsync));
+
+                throw new Exception();
+            }
+        }
     }
 }

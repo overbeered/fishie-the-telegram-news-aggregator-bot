@@ -2,6 +2,7 @@
 using Fishie.Core.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TL;
 using WTelegram;
@@ -14,7 +15,6 @@ namespace Fishie.Services.TelegramService
         private readonly ILogger<TelegramServices> _logger;
         private readonly СlientConnector _сlientConnector;
         private Client _client;
-
         public TelegramServices(ILogger<TelegramServices> logger,
             СlientConnector сlientConnector)
         {
@@ -25,7 +25,6 @@ namespace Fishie.Services.TelegramService
             _client.LoginUserIfNeeded();
         }
 
-
         public async Task<CoreModels.Channel?> SearchChannelAsync(string query)
         {
             try
@@ -34,10 +33,9 @@ namespace Fishie.Services.TelegramService
 
                 foreach (var (id, chat) in search.chats)
                 {
-                    if (chat.Title == query && chat.IsActive)
+                    if (chat.Title == query)
                     {
                         var channel = (InputPeerChannel)chat.ToInputPeer();
-
                         return new CoreModels.Channel(
                                 channel.channel_id,
                                 chat.Title,
@@ -98,6 +96,57 @@ namespace Fishie.Services.TelegramService
             }
         }
 
+        public async Task<List<string?>?> GetMessagesChannelAsync(CoreModels.Channel channel, int count = 5)
+        {
+            try
+            {
+                var messagesList = new List<string>();
+
+                var messages = await _client.Messages_GetHistory(new InputChannel()
+                {
+                    channel_id = channel.Id,
+                    access_hash = channel.AccessHash
+                });
+
+                for (int msgNumber = 0; msgNumber < count; msgNumber++)
+                {
+                    var message = (Message)messages.Messages[msgNumber];
+                    messagesList.Add(message.message + " " + "Date:" + message.Date);
+                }
+
+                return messagesList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(GetMessagesChannelAsync));
+
+                throw new Exception();
+            }
+        }
+
+        public async Task SendMessagesChannelAsync(CoreModels.Channel channel, string message)
+        {
+            try
+            {
+                await _client.SendMessageAsync(new InputChannel()
+                {
+                    channel_id = channel.Id,
+                    access_hash = channel.AccessHash
+                },
+                message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(SendMessagesChannelAsync));
+
+                throw new Exception();
+            }
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -117,6 +166,5 @@ namespace Fishie.Services.TelegramService
                 default: return null;
             }
         }
-
     }
 }

@@ -147,5 +147,61 @@ namespace Fishie.Server.Controllers
                     nameof(PostUnsubscribeAsync));
             }
         }
+
+        [HttpPost("Messages")]
+        public async Task<List<string?>?> PostMessagesChannelAsync(string value, int count)
+        {
+            try
+            {
+                return await _channelServices.GetMessagesChannelAsync(value, count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostMessagesChannelAsync));
+            }
+
+            return default;
+        }
+
+        [HttpPost("SendMessages")]
+        public async Task PostSendMessagesChannelAsync(string value, string messages)
+        {
+            try
+            {
+
+                await _channelServices.SendMessagesChannelAsync(value, messages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostMessagesChannelAsync));
+            }
+        }
+
+        [HttpPost("SendMessagesOverbeered")]
+        public async Task PostSendMessagesChannelOverbeeredAsync(string value, int count)
+        {
+            try
+            {
+                List<string?>? messagesList = await _channelServices.GetMessagesChannelAsync(value, count);
+
+                if(messagesList != null)
+                {
+                    foreach (var message in messagesList)
+                    {
+                        await _channelServices.SendMessagesChannelAsync("Overbeered", message! + " Name: " +value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Controller: {ControllerName} in Method: {MethodName},",
+                    nameof(ChannelController),
+                    nameof(PostMessagesChannelAsync));
+            }
+        }
     }
 }

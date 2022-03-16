@@ -60,5 +60,21 @@ namespace Fishie.Core.Services
         /// <param name="channel"></param>
         /// <returns></returns>
         Task UnsubscribeAsync(string channelName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        Task<List<string?>?> GetMessagesChannelAsync(string channelName, int count = 5);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channelName"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task SendMessagesChannelAsync(string channelName, string message);
     }
 }
