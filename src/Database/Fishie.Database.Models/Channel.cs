@@ -1,5 +1,8 @@
 ﻿namespace Fishie.Database.Models
 {
+    /// <summary>
+    /// Сhannel model for the database
+    /// </summary>
     public class Channel
     {
         /// <summary>

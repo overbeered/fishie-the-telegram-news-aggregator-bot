@@ -146,9 +146,9 @@ namespace Fishie.Services.TelegramService
                 throw new Exception();
             }
         }
-        
+
         /// <summary>
-        /// 
+        /// Сonfiguration of the application to connect to telegram
         /// </summary>
         /// <param name="what"></param>
         /// <returns></returns>

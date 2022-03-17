@@ -1,7 +1,7 @@
 ﻿namespace Fishie.Core.Models
 {
     /// <summary>
-    /// Telegram channel
+    /// Telegram channel model
     /// </summary>
     public class Channel
     {
@@ -19,7 +19,6 @@
         ///  Telegram access hash channel
         /// </summary>
         public long AccessHash { get; private set; }
-
 
         public Channel(long id, string name, long accessHash)
         {
