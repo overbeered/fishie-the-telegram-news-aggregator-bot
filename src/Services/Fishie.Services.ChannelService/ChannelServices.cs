@@ -38,40 +38,34 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(AddChannelAsync));
-
-                throw new Exception();
             }
         }
 
-        public async Task<bool> DeleteChannelAsync(string channelName)
+        public async Task DeleteChannelAsync(string channelName)
         {
             try
             {
-                return await _channelRepository.DeleteChannelAsync(channelName);
+                await _channelRepository.DeleteChannelAsync(channelName);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(DeleteChannelAsync));
-
-                throw new Exception();
             }
         }
 
-        public async Task<bool> DeleteChannelByIdAsync(long id)
+        public async Task DeleteChannelByIdAsync(long id)
         {
             try
             {
-                return await _channelRepository.DeleteChannelByIdAsync(id);
+                await _channelRepository.DeleteChannelByIdAsync(id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(DeleteChannelByIdAsync));
-
-                throw new Exception();
             }
         }
 
@@ -86,9 +80,9 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(GetAllChannelsAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task<Channel?> GetChannelAsync(string channelName)
@@ -102,9 +96,9 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(GetChannelAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task<Channel?> GetChannelByIdAsync(long id)
@@ -118,9 +112,9 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(GetChannelByIdAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task SubscribeAsync(string channelName)
@@ -135,8 +129,6 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(SubscribeAsync));
-
-                throw new Exception();
             }
         }
 
@@ -152,8 +144,6 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(UnsubscribeAsync));
-
-                throw new Exception();
             }
         }
 
@@ -171,9 +161,9 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(GetMessagesChannelAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task SendMessagesChannelAsync(string channelName, string message)
@@ -188,8 +178,6 @@ namespace Fishie.Services.ChannelService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(ChannelServices),
                     nameof(SendMessagesChannelAsync));
-
-                throw new Exception();
             }
         }
     }

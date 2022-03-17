@@ -40,14 +40,14 @@ namespace Fishie.Core.Repositories
         /// Deletes a channel by name
         /// </summary>
         /// <param name="channelName">Channel name</param>
-        /// <returns>true - channel deleted, false - channel has not been deleted</returns>
-        Task<bool> DeleteChannelAsync(string channelName);
+        /// <returns></returns>
+        Task DeleteChannelAsync(string channelName);
 
         /// <summary>
         /// Deletes a channel by id
         /// </summary>
         /// <param name="id">Channel id</param>
-        /// <returns>true - channel deleted, false - channel has not been deleted</returns>
-        Task<bool> DeleteChannelByIdAsync(long id);
+        /// <returns></returns>
+        Task DeleteChannelByIdAsync(long id);
     }
 }

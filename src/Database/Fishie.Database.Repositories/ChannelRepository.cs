@@ -28,9 +28,9 @@ namespace Fishie.Database.Repositories
         {
             try
             {
-                var isChannel = await _dbContext.Channels!.AnyAsync(c => c.Id == channel.Id);
+                var isChannelExists = await _dbContext.Channels!.AnyAsync(c => c.Id == channel.Id);
 
-                if (!isChannel)
+                if (!isChannelExists)
                 {
                     await _dbContext.AddAsync(CoreToDbChannelConverter.Convert(channel)!);
                     await _dbContext.SaveChangesAsync();
@@ -41,36 +41,34 @@ namespace Fishie.Database.Repositories
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(AddChannelAsync));
-
-                throw new Exception();
             }
         }
 
-        public async Task<bool> DeleteChannelAsync(string channelName)
+        public async Task DeleteChannelAsync(string channelName)
         {
             try
             {
                 DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Name == channelName);
+                
                 if (channel != null)
                 {
                     _dbContext.Channels!.Remove(channel);
                     await _dbContext.SaveChangesAsync();
-                    return true;
                 }
-
-                return false;
+                else
+                {
+                    throw new Exception($"channel name - {channelName} is not found");  
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(DeleteChannelAsync));
-
-                throw new Exception();
             }
         }
 
-        public async Task<bool> DeleteChannelByIdAsync(long id)
+        public async Task DeleteChannelByIdAsync(long id)
         {
             try
             {
@@ -80,18 +78,17 @@ namespace Fishie.Database.Repositories
                 {
                     _dbContext.Channels!.Remove(channel);
                     await _dbContext.SaveChangesAsync();
-                    return true;
                 }
-
-                return false;
+                else
+                {
+                    throw new Exception($"channel id - {id} is not found");
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(DeleteChannelByIdAsync));
-
-                throw new Exception();
             }
         }
 
@@ -108,9 +105,9 @@ namespace Fishie.Database.Repositories
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(GetAllChannelsAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task<CoreModels.Channel?> GetChannelAsync(string channelName)
@@ -126,9 +123,9 @@ namespace Fishie.Database.Repositories
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(GetChannelAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task<CoreModels.Channel?> GetChannelByIdAsync(long id)
@@ -144,9 +141,9 @@ namespace Fishie.Database.Repositories
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ChannelRepository),
                     nameof(GetChannelByIdAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
     }
 }

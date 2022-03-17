@@ -14,7 +14,7 @@ namespace Fishie.Services.TelegramService
     {
         private readonly ILogger<TelegramServices> _logger;
         private readonly СlientConnector _сlientConnector;
-        private Client _client;
+        private readonly Client _client;
         public TelegramServices(ILogger<TelegramServices> logger,
             СlientConnector сlientConnector)
         {
@@ -42,17 +42,15 @@ namespace Fishie.Services.TelegramService
                                 channel.access_hash);
                     }
                 }
-
-                return null;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(TelegramServices),
                     nameof(SearchChannelAsync));
-
-                throw new Exception();
             }
+
+            return null;
 
         }
 
@@ -71,8 +69,6 @@ namespace Fishie.Services.TelegramService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(TelegramServices),
                     nameof(SubscribeAsync));
-
-                throw new Exception();
             }
         }
 
@@ -91,8 +87,6 @@ namespace Fishie.Services.TelegramService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(TelegramServices),
                     nameof(UnsubscribeAsync));
-
-                throw new Exception();
             }
         }
 
@@ -121,9 +115,9 @@ namespace Fishie.Services.TelegramService
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
                     nameof(TelegramServices),
                     nameof(GetMessagesChannelAsync));
-
-                throw new Exception();
             }
+
+            return null;
         }
 
         public async Task SendMessagesChannelAsync(CoreModels.Channel channel, string message)

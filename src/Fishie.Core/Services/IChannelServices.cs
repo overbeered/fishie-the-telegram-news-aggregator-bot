@@ -40,15 +40,15 @@ namespace Fishie.Core.Services
         /// Deletes a channel\chat by name
         /// </summary>
         /// <param name="channelName">Сhannel\chat name</param>
-        /// <returns>true - channel deleted, false - channel has not been deleted</returns>
-        Task<bool> DeleteChannelAsync(string channelName);
+        /// <returns></returns>
+        Task DeleteChannelAsync(string channelName);
 
         /// <summary>
         /// Deletes a channel\chat by id
         /// </summary>
         /// <param name="id">Сhannel\chat id</param>
-        /// <returns>true - channel deleted, false - channel has not been deleted</returns>
-        Task<bool> DeleteChannelByIdAsync(long id);
+        /// <returns></returns>
+        Task DeleteChannelByIdAsync(long id);
 
         /// <summary>
         /// Subscribes to the channel in telegram
