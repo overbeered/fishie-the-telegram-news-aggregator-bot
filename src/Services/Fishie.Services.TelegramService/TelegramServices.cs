@@ -94,7 +94,7 @@ namespace Fishie.Services.TelegramService
         {
             try
             {
-                var messagesList = new List<string>();
+                var messagesList = new List<string?>();
 
                 var messages = await _client.Messages_GetHistory(new InputChannel()
                 {
@@ -146,7 +146,7 @@ namespace Fishie.Services.TelegramService
         /// </summary>
         /// <param name="what"></param>
         /// <returns></returns>
-        private string Config(string what)
+        private string? Config(string what)
         {
             switch (what)
             {

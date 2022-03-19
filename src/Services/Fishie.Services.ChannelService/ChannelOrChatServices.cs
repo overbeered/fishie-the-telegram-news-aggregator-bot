@@ -9,12 +9,12 @@ using Fishie.Core.Models;
 
 namespace Fishie.Services.ChannelService
 {
-    public class ChannelServices : IChannelServices
+    public class ChannelOrChatServices : IChannelOrChatServices
     {
-        private readonly ILogger<ChannelServices> _logger;
+        private readonly ILogger<ChannelOrChatServices> _logger;
         private readonly IChannelRepository _channelRepository;
         private readonly ITelegramServices _telegramServices;
-        public ChannelServices(ILogger<ChannelServices> logger,
+        public ChannelOrChatServices(ILogger<ChannelOrChatServices> logger,
             IChannelRepository channelRepository,
             ITelegramServices telegramServices)
         {
@@ -36,7 +36,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(AddChannelAsync));
             }
         }
@@ -50,7 +50,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(DeleteChannelAsync));
             }
         }
@@ -64,7 +64,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(DeleteChannelByIdAsync));
             }
         }
@@ -78,7 +78,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(GetAllChannelsAsync));
             }
 
@@ -94,7 +94,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(GetChannelAsync));
             }
 
@@ -110,7 +110,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(GetChannelByIdAsync));
             }
 
@@ -127,7 +127,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(SubscribeAsync));
             }
         }
@@ -142,7 +142,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(UnsubscribeAsync));
             }
         }
@@ -159,7 +159,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(GetMessagesChannelAsync));
             }
 
@@ -176,7 +176,7 @@ namespace Fishie.Services.ChannelService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
-                    nameof(ChannelServices),
+                    nameof(ChannelOrChatServices),
                     nameof(SendMessagesChannelAsync));
             }
         }

@@ -1,4 +1,4 @@
-using Fishie.Core.Repositories;
+﻿using Fishie.Core.Repositories;
 using Fishie.Core.Services;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories;
@@ -13,6 +13,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Fishie.Services.TelegramService;
+using Fishie.Services.MessagesHandlerService;
+using Fishie.Services.СommandsHandlerService;
 
 namespace Fishie.Server
 {
@@ -41,8 +43,10 @@ namespace Fishie.Server
             services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connectionString));
 
 
-            services.AddTransient<IChannelServices, ChannelServices>();
+            services.AddTransient<IChannelOrChatServices, ChannelOrChatServices>();
             services.AddTransient<IChannelRepository, ChannelRepository>();
+            services.AddTransient<IMessagesHandler, MessagesHandler>();
+            services.AddTransient<IСommandsHandler, СommandsHandler>();
             services.AddSingleton<ITelegramServices, TelegramServices>();
             services.AddConnectors(Configuration);
         }
