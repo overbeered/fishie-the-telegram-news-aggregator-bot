@@ -7,9 +7,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
     /// </summary>
     internal class SendMessages : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public SendMessages(IChannelOrChatServices channelOrChatServices)
+        public SendMessages(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }

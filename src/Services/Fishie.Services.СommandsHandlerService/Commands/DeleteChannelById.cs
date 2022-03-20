@@ -4,9 +4,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
 {
     internal class DeleteChannelById : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public DeleteChannelById(IChannelOrChatServices channelOrChatServices)
+        public DeleteChannelById(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }

@@ -4,9 +4,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
 {
     internal class Unsubscribe : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public Unsubscribe(IChannelOrChatServices channelOrChatServices)
+        public Unsubscribe(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }

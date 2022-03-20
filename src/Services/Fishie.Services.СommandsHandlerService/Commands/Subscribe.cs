@@ -4,9 +4,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
 {
     internal class Subscribe : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public Subscribe(IChannelOrChatServices channelOrChatServices)
+        public Subscribe(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }

@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Core", "Fishie.Core\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9E0C1F97-156C-42B0-A6CC-F67CF2A75E55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.ChannelService", "Services\Fishie.Services.ChannelService\Fishie.Services.ChannelService.csproj", "{2B111EE2-6859-4BBC-900F-9BE688AF34EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.ChatService", "Services\Fishie.Services.ChannelService\Fishie.Services.ChatService.csproj", "{2B111EE2-6859-4BBC-900F-9BE688AF34EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.TelegramService", "Services\Fishie.Services.TelegramService\Fishie.Services.TelegramService.csproj", "{8BE8121B-9980-4715-B5E1-750F0EF19D03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fishie.Services.СommandsHandlerService", "Services\Fishie.Services.СommandsHandlerService\Fishie.Services.СommandsHandlerService.csproj", "{6AFE7E2C-1954-4316-8B14-EED96596B53E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.СommandsHandlerService", "Services\Fishie.Services.СommandsHandlerService\Fishie.Services.СommandsHandlerService.csproj", "{6AFE7E2C-1954-4316-8B14-EED96596B53E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.MessagesHandlerService", "Services\Fishie.Services.MessagesHandlerService\Fishie.Services.MessagesHandlerService.csproj", "{DD658C9A-4F54-4424-A8C4-680FC18109D9}"
 EndProject

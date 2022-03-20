@@ -7,7 +7,7 @@ namespace Fishie.Core.Services
     /// <summary>
     /// Service for working with channels, chats
     /// </summary>
-    public interface IChannelOrChatServices
+    public interface IChatServices
     {
         /// <summary>
         /// Adds a channel\chat

@@ -4,9 +4,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
 {
     internal class AddToChannel : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public AddToChannel(IChannelOrChatServices channelOrChatServices)
+        public AddToChannel(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }

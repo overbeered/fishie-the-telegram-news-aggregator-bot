@@ -5,10 +5,10 @@ namespace Fishie.Services.СommandsHandlerService
 {
     public class СommandsHandler : IСommandsHandler
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
         private readonly Dictionary<string, ICommand> _handlers; 
 
-        public СommandsHandler(IChannelOrChatServices channelOrChatServices)
+        public СommandsHandler(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
 

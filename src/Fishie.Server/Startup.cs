@@ -3,7 +3,7 @@ using Fishie.Core.Services;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories;
 using Fishie.Server.Providers;
-using Fishie.Services.ChannelService;
+using Fishie.Services.ChatService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +43,7 @@ namespace Fishie.Server
             services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connectionString));
 
 
-            services.AddTransient<IChannelOrChatServices, ChannelOrChatServices>();
+            services.AddTransient<IChatServices, ChatServices>();
             services.AddTransient<IChannelRepository, ChannelRepository>();
             services.AddTransient<IMessagesHandler, MessagesHandler>();
             services.AddTransient<IСommandsHandler, СommandsHandler>();

@@ -7,9 +7,9 @@ namespace Fishie.Services.СommandsHandlerService.Commands
     /// </summary>
     internal class SendMessagesOverbeered : ICommand
     {
-        private readonly IChannelOrChatServices _channelOrChatServices;
+        private readonly IChatServices _channelOrChatServices;
 
-        public SendMessagesOverbeered(IChannelOrChatServices channelOrChatServices)
+        public SendMessagesOverbeered(IChatServices channelOrChatServices)
         {
             _channelOrChatServices = channelOrChatServices;
         }
