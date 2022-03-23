@@ -7,6 +7,9 @@ using TL;
 
 namespace Fishie.Services.TelegramService.Commands
 {
+    /// <summary>
+    /// Unsubscribe to the channel\chat from the database. Example: /unsubscribe channel name
+    /// </summary>
     internal class Unsubscribe : ICommand
     {
             
@@ -25,7 +28,7 @@ namespace Fishie.Services.TelegramService.Commands
 
                 if (channel == null) throw new Exception();
 
-                await client.Channels_JoinChannel(new InputChannel()
+                await client.LeaveChat(new InputChannel()
                 {
                     channel_id = channel.Id,
                     access_hash = channel.AccessHash

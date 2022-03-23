@@ -8,6 +8,9 @@ using TL;
 
 namespace Fishie.Services.TelegramService.Commands
 {
+    /// <summary>
+    /// The list of commands is sent to the chat. Example: /commands chat name
+    /// </summary>
     internal class ToCommands : ICommand
     {
 
@@ -21,7 +24,7 @@ namespace Fishie.Services.TelegramService.Commands
         public async Task ExecuteAsync(Client client, string action)
         {
             var chatName = action.Remove(action.IndexOf("\n"));
-            var message = action.Remove(0, action.IndexOf("\n") + 9);
+            var message = action.Remove(0, action.IndexOf("\n"));
 
             using (var scope = _serviceScopeFactory.CreateScope())
             {

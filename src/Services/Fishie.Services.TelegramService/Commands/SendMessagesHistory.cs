@@ -2,20 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using TL;
 using WTelegram;
+using TL;
 
 namespace Fishie.Services.TelegramService.Commands
 {
-    /// <summary>
-    /// Send the history of recent messages from the channel to Overbeared. Example: /sendMessagesOverbeered channel name | 3
-    /// </summary>
-    internal class SendMessagesOverbeered : ICommand
+    internal class SendMessagesHistory : ICommand
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public SendMessagesOverbeered(IServiceScopeFactory serviceScopeFactory)
+        public SendMessagesHistory(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -23,8 +22,11 @@ namespace Fishie.Services.TelegramService.Commands
 
         public async Task ExecuteAsync(Client client, string action)
         {
+            var chatName = action.Remove(action.IndexOf("|") - 1);
+            action = action.Remove(0, action.IndexOf("|") + 2);
             var channelName = action.Remove(action.IndexOf("|") - 1);
             var count = int.Parse(action.Remove(0, action.IndexOf("|") + 2));
+
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
@@ -49,7 +51,7 @@ namespace Fishie.Services.TelegramService.Commands
 
                 if (messagesList != null)
                 {
-                    var chat = await chatRepository.GetChatAsync("Overbeered");
+                    var chat = await chatRepository.GetChatAsync(chatName);
                     foreach (var message in messagesList)
                     {
                         await client.SendMessageAsync(new InputChannel()

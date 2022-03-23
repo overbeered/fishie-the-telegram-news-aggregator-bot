@@ -6,6 +6,9 @@ using WTelegram;
 
 namespace Fishie.Services.TelegramService
 {
+    /// <summary>
+    /// Command handler
+    /// </summary>
     public class СommandsHandler
     {
         private readonly Dictionary<string, ICommand> _handlers;
@@ -24,6 +27,7 @@ namespace Fishie.Services.TelegramService
                 {"subscribe",  new Subscribe(serviceScopeFactory)},
                 {"unsubscribe",  new Unsubscribe(serviceScopeFactory)},
                 {"sendMessages",  new SendMessages(serviceScopeFactory)},
+                {"sendMessagesHistory",  new SendMessagesHistory(serviceScopeFactory)},
                 {"sendMessagesOverbeered",  new SendMessagesOverbeered(serviceScopeFactory)}
             };
         }

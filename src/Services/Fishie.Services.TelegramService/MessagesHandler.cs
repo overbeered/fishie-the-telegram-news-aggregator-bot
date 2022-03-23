@@ -15,7 +15,6 @@ namespace Fishie.Services.TelegramService
 
         public async Task Handle(Client client, string message)
         {
-            // /command
             if (message.IndexOf("/") == 0) await new СommandsHandler(_serviceScopeFactory).HandleAsync(client, message.Remove(0, 1));
         }
     }

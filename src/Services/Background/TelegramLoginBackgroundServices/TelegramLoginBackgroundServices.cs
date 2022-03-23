@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TelegramLoginBackgroundService
 {
+    /// <summary>
+    /// Telegram connection/disconnection background service
+    /// </summary>
     public class TelegramLoginBackgroundServices : IHostedService
     {
         private readonly ILogger<TelegramServices> _logger;

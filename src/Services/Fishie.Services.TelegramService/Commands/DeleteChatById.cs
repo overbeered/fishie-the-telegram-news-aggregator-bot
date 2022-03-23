@@ -6,7 +6,7 @@ using WTelegram;
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
-    /// Delete from the database channel\chat. Example: /deleteChannelById 123456789
+    /// Delete from the database chat. Example: /deleteChatById 123456789
     /// </summary>
     internal class DeleteChatById : ICommand
     {

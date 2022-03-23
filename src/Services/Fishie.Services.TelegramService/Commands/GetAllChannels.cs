@@ -8,7 +8,7 @@ using WTelegram;
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
-    /// /getAllChannels Overbeered
+    /// Sends a list of channels to the chat. Example: /getAllChannels chat name
     /// </summary>
     internal class GetAllChannels : ICommand
     {
@@ -23,9 +23,10 @@ namespace Fishie.Services.TelegramService.Commands
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                IChannelRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                var sendChannel = await chatRepository.GetChannelAsync(action);
-                var listChannels = await chatRepository.GetAllChannelsAsync();
+                IChannelRepository channalRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
+                IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
+                var sendChat = await chatRepository.GetChatAsync(action);
+                var listChannels = await channalRepository.GetAllChannelsAsync();
                 string message = "";
 
                 if (listChannels != null)
@@ -38,8 +39,8 @@ namespace Fishie.Services.TelegramService.Commands
 
                 await client.SendMessageAsync(new InputChannel()
                 {
-                    channel_id = sendChannel!.Id,
-                    access_hash = sendChannel.AccessHash
+                    channel_id = sendChat!.Id,
+                    access_hash = sendChat.AccessHash
                 }, message);
             }
         }

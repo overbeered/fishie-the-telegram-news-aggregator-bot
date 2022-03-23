@@ -8,7 +8,7 @@ using WTelegram;
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
-    /// Send a message to the channel\chat from the database. Example: /sendMessages channel name message: Hello world!
+    /// Send a message to the chat from the database. Example: /sendMessages channel name message: Hello world!
     /// </summary>
     internal class SendMessages : ICommand
     {
@@ -21,20 +21,20 @@ namespace Fishie.Services.TelegramService.Commands
 
         public async Task ExecuteAsync(Client client, string action)
         {
-            var channelName = action.Remove(action.IndexOf("message: ") - 1);
+            var chatName = action.Remove(action.IndexOf("message: ") - 1);
             var message = action.Remove(0, action.IndexOf("message: ") + 9);
 
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                IChannelRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                var channel = await chatRepository.GetChannelAsync(channelName);
+                IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
+                var chat = await chatRepository.GetChatAsync(chatName);
 
-                if (channel == null) throw new Exception();
+                if (chat == null) throw new Exception();
 
                 await client.SendMessageAsync(new InputChannel()
                 {
-                    channel_id = channel.Id,
-                    access_hash = channel.AccessHash
+                    channel_id = chat.Id,
+                    access_hash = chat.AccessHash
                 }, message);
             }
 

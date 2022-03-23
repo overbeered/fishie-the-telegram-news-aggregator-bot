@@ -60,20 +60,18 @@ namespace Fishie.Services.TelegramService
                     {
                         await messagesHandler.Handle(_client, "/addChat " + _chatConfigurat.ChatName);
                     }
-                    else
+
+                    foreach (var chat in listChats!)
                     {
-                        foreach (var chat in listChats!)
+                        if (messageBase.Peer.ID == chat!.Id)
                         {
-                            if (messageBase.Peer.ID == chat!.Id)
+                            switch (messageBase)
                             {
-                                switch (messageBase)
-                                {
-                                    case Message m:
-                                        await messagesHandler.Handle(_client, m.message);
-                                        break;
-                                }
-                                break;
+                                case Message m:
+                                    await messagesHandler.Handle(_client, m.message);
+                                    break;
                             }
+                            break;
                         }
                     }
                 }

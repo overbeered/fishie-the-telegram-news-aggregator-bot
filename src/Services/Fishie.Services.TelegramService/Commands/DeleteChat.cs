@@ -1,14 +1,13 @@
 ﻿using Fishie.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
+    /// <summary>
+    /// Delete from the database chat. Example: /deleteChat chat name
+    /// </summary>
     internal class DeleteChat : ICommand
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;

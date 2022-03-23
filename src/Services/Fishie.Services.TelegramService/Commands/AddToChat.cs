@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
-    /// Find and add a channel\chat to the database. Example: /addChannel channel name
+    /// Find and add a channel\chat to the database. Example: /addChat chat name
     /// </summary>
     public class AddToChat : ICommand
     {

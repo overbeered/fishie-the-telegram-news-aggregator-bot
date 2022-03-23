@@ -1,22 +1,22 @@
 ﻿namespace Fishie.Core.Models
 {
     /// <summary>
-    /// Telegram channel model
+    /// Telegram chat listening model
     /// </summary>
     public class Chat
     {
         /// <summary>
-        /// Telegram channel Id
+        /// Telegram chat Id
         /// </summary>
         public long Id { get; private set; }
 
         /// <summary>
-        /// Telegram channel name
+        /// Telegram chat name
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        ///  Telegram access hash channel
+        ///  Telegram access hash chat
         /// </summary>
         public long AccessHash { get; private set; }
 
