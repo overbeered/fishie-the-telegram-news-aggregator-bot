@@ -7,6 +7,7 @@ namespace Fishie.Database.Context
     public class NpgSqlContext : DbContext
     {
         public DbSet<Channel>? Channels { get; set; }
+        public DbSet<Chat>? Chats { get; set; }
 
         public NpgSqlContext(DbContextOptions<NpgSqlContext> options) : base(options)
         {
@@ -15,6 +16,7 @@ namespace Fishie.Database.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ChannelConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatConfiguration());
         }
     }
 }

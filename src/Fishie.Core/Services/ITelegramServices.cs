@@ -10,40 +10,56 @@ namespace Fishie.Core.Services
     public interface ITelegramServices
     {
         /// <summary>
-        /// Channel\chat search by name in telegram
+        /// Login as a user (if not already logged-in).
         /// </summary>
-        /// <param name="query">Сhannel name</param>
-        /// <returns>Сhannel model</returns>
-        Task<Channel?> SearchChannelAsync(string query);
-
-        /// <summary>
-        /// Subscribes to the channel in telegram
-        /// </summary>
-        /// <param name="channel">Сhannel model</param>
         /// <returns></returns>
-        Task SubscribeAsync(Channel channel);
+        Task LoginAsync();
 
         /// <summary>
-        /// Unsubscribes to the channel in the telegram
+        /// Disconnect from Telegram 
         /// </summary>
-        /// <param name="channel">Сhannel model</param>
-        /// <returns></returns>
-        Task UnsubscribeAsync(Channel channel);
+        void Reset();
 
         /// <summary>
-        /// Gets the history of messages in the chat\channel
+        /// Has this Client established connection been disconnected?
         /// </summary>
-        /// <param name="channel">Сhannel model</param>
-        /// <param name="count">The number of messages starting from newer ones. By default, the value is 5</param>
-        /// <returns>List of messages</returns>
-        Task<List<string?>?> GetMessagesChannelAsync(Channel channel, int count = 5);
+        bool Disconnected { get; }
 
-        /// <summary>
-        /// Sends a message to the channel\chat
-        /// </summary>
-        /// <param name="channel">Сhannel model</param>
-        /// <param name="message">Message to send</param>
-        /// <returns></returns>
-        Task SendMessagesChannelAsync(Channel channel, string message);
+        ///// <summary>
+        ///// Channel\chat search by name in telegram
+        ///// </summary>
+        ///// <param name="query">Сhannel name</param>
+        ///// <returns>Сhannel model</returns>
+        //Task<Channel?> SearchChannelAsync(string query);
+
+        ///// <summary>
+        ///// Subscribes to the channel in telegram
+        ///// </summary>
+        ///// <param name="channel">Сhannel model</param>
+        ///// <returns></returns>
+        //Task SubscribeAsync(Channel channel);
+
+        ///// <summary>
+        ///// Unsubscribes to the channel in the telegram
+        ///// </summary>
+        ///// <param name="channel">Сhannel model</param>
+        ///// <returns></returns>
+        //Task UnsubscribeAsync(Channel channel);
+
+        ///// <summary>
+        ///// Gets the history of messages in the chat\channel
+        ///// </summary>
+        ///// <param name="channel">Сhannel model</param>
+        ///// <param name="count">The number of messages starting from newer ones. By default, the value is 5</param>
+        ///// <returns>List of messages</returns>
+        //Task<List<string?>?> GetMessagesChannelAsync(Channel channel, int count = 5);
+
+        ///// <summary>
+        ///// Sends a message to the channel\chat
+        ///// </summary>
+        ///// <param name="channel">Сhannel model</param>
+        ///// <param name="message">Message to send</param>
+        ///// <returns></returns>
+        //Task SendMessagesChannelAsync(Channel channel, string message);
     }
 }

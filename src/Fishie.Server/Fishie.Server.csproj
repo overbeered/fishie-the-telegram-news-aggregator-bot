@@ -17,10 +17,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Database\Fishie.Database.Repositories\Fishie.Database.Repositories.csproj" />
     <ProjectReference Include="..\Fishie.Core\Fishie.Core.csproj" />
-    <ProjectReference Include="..\Services\Fishie.Services.ChannelService\Fishie.Services.ChatService.csproj" />
-    <ProjectReference Include="..\Services\Fishie.Services.MessagesHandlerService\Fishie.Services.MessagesHandlerService.csproj" />
+    <ProjectReference Include="..\Services\Background\TelegramLoginBackgroundServices\TelegramLoginBackgroundService.csproj" />
     <ProjectReference Include="..\Services\Fishie.Services.TelegramService\Fishie.Services.TelegramService.csproj" />
-    <ProjectReference Include="..\Services\Fishie.Services.СommandsHandlerService\Fishie.Services.СommandsHandlerService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -2,8 +2,7 @@
 using Fishie.Core.Services;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories;
-using Fishie.Server.Providers;
-using Fishie.Services.ChatService;
+using Fishie.Server.Configurat;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Fishie.Services.TelegramService;
-using Fishie.Services.MessagesHandlerService;
-using Fishie.Services.СommandsHandlerService;
+using TelegramLoginBackgroundService;
 
 namespace Fishie.Server
 {
@@ -40,15 +38,17 @@ namespace Fishie.Server
             var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                        Configuration.GetConnectionString("DefaultConnection");
 
+
+
             services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connectionString));
 
-
-            services.AddTransient<IChatServices, ChatServices>();
-            services.AddTransient<IChannelRepository, ChannelRepository>();
-            services.AddTransient<IMessagesHandler, MessagesHandler>();
-            services.AddTransient<IСommandsHandler, СommandsHandler>();
+            services.AddSingleton<TelegramLoginBackgroundServices>();
+            services.AddHostedService<TelegramLoginBackgroundServices>();
             services.AddSingleton<ITelegramServices, TelegramServices>();
+            services.AddTransient<IChatRepository, ChatRepository>();
+            services.AddTransient<IChannelRepository, ChannelRepository>();
             services.AddConnectors(Configuration);
+            services.AddChat(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -57,6 +57,7 @@ namespace Fishie.Server
             {
                 app.UseDeveloperExceptionPage();
             }
+
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fishie.Server v1"));
