@@ -8,6 +8,6 @@ namespace Fishie.Services.TelegramService
     /// </summary>
     internal interface ICommand
     {
-        Task ExecuteAsync(Client client, string action);
+        Task ExecuteAsync(Client client, long chatId, string action);
     }
 }

@@ -5,18 +5,13 @@ using System.Threading.Tasks;
 using TL;
 using WTelegram;
 
-
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.ResponseCommands
 {
-    /// <summary>
-    /// The list of commands is sent to the chat. Example: /commands
-    /// </summary>
-    internal class ToCommands : ICommand
+    internal class ResponseCommand : ICommand
     {
-
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public ToCommands(IServiceScopeFactory serviceScopeFactory)
+        public ResponseCommand(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -28,7 +23,7 @@ namespace Fishie.Services.TelegramService.Commands
                 IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
                 var chat = await chatRepository.GetChatByIdAsync(chatId);
 
-                if (chat == null) throw new Exception();
+                if (chat == null) throw new Exception("chat not found");
 
                 await client.SendMessageAsync(new InputChannel()
                 {

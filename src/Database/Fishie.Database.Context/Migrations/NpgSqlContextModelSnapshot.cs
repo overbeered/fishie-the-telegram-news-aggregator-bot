@@ -58,6 +58,25 @@ namespace Fishie.Database.Context.Migrations
 
                     b.ToTable("Chats");
                 });
+
+            modelBuilder.Entity("Fishie.Database.Models.ForwardMessages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("ChannelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ChatId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ForwardMessages");
+                });
 #pragma warning restore 612, 618
         }
     }

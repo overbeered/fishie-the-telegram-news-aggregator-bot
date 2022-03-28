@@ -8,6 +8,7 @@ namespace Fishie.Database.Context
     {
         public DbSet<Channel>? Channels { get; set; }
         public DbSet<Chat>? Chats { get; set; }
+        public DbSet<ForwardMessages>? ForwardMessages { get; set; }
 
         public NpgSqlContext(DbContextOptions<NpgSqlContext> options) : base(options)
         {
@@ -17,6 +18,7 @@ namespace Fishie.Database.Context
         {
             modelBuilder.ApplyConfiguration(new ChannelConfiguration());
             modelBuilder.ApplyConfiguration(new ChatConfiguration());
+            modelBuilder.ApplyConfiguration(new ForwardMessagesConfiguration());
         }
     }
 }

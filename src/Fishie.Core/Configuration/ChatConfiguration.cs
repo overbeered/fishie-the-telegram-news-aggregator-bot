@@ -3,7 +3,7 @@
     /// <summary>
     /// Default chat configuration
     /// </summary>
-    public class ChatConfigurat
+    public class ChatConfiguration
     {
         public string? ChatName { get; set; }
     }

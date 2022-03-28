@@ -47,6 +47,7 @@ namespace Fishie.Server
             services.AddSingleton<ITelegramServices, TelegramServices>();
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IChannelRepository, ChannelRepository>();
+            services.AddTransient<IForwardMessagesRepository, ForwardMessagesRepository>();
             services.AddConnectors(Configuration);
             services.AddChat(Configuration);
         }

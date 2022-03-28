@@ -8,7 +8,7 @@ namespace Fishie.Server.Configurat
     {
         public static void AddChat(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectors = configuration.GetSection("ChatConfiguration").Get<ChatConfigurat>();
+            var connectors = configuration.GetSection("ChatConfiguration").Get<ChatConfiguration>();
 
             services.AddTransient(_ => connectors);
         }

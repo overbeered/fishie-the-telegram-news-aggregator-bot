@@ -36,6 +36,20 @@ namespace Fishie.Database.Context.Migrations
                 {
                     table.PrimaryKey("PK_Chats", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ForwardMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ChatId = table.Column<long>(type: "bigint", nullable: false),
+                    ChannelId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ForwardMessages", x => x.Id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -45,6 +59,9 @@ namespace Fishie.Database.Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "Chats");
+
+            migrationBuilder.DropTable(
+                name: "ForwardMessages");
         }
     }
 }

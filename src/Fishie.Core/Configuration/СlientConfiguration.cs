@@ -3,7 +3,7 @@
     /// <summary>
     /// Сonfigurations for connecting to telegram
     /// </summary>
-    public class СlientConfigurat
+    public class СlientConfiguration
     {
         /// <summary>
         /// Your app's api https://my.telegram.org/auth?to=apps
