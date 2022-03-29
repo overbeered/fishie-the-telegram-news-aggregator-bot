@@ -30,16 +30,16 @@ namespace Fishie.Core.Repositories
         Task<IEnumerable<ForwardMessages?>?> GetAllForwardMessagesAsync();
 
         /// <summary>
-        /// 
+        /// Deletes all channel related entries
         /// </summary>
-        /// <param name="channnelId"></param>
+        /// <param name="channnelId">Channel id</param>
         /// <returns></returns>
         Task DeleteForwardChannelByIdAsync(long channnelId);
 
         /// <summary>
-        /// 
+        /// Deletes all chat related entries
         /// </summary>
-        /// <param name="chatId"></param>
+        /// <param name="chatId">Chat id</param>
         /// <returns></returns>
         Task DeleteForwardChatByIdAsync(long chatId);
 
