@@ -50,7 +50,7 @@ namespace Fishie.Services.TelegramService
             {
                 IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider
                     .GetRequiredService<IForwardMessagesRepository>();
-                var listSendMessages = await forwardMessagesRepository.GetAllUpdateAsync();
+                var listSendMessages = await forwardMessagesRepository.GetAllForwardMessagesAsync();
 
                 if (listSendMessages != null)
                 {

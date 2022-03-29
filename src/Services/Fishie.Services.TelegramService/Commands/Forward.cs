@@ -45,7 +45,7 @@ namespace Fishie.Services.TelegramService.Commands
                     }
                     else
                     {
-                        await sendMessagesUpdatesRepository.AddUpdateAsync(new ForwardMessages(channel.Id, chatId));
+                        await sendMessagesUpdatesRepository.AddForwardMessagesAsync(new ForwardMessages(channel.Id, chatId));
                     }
                 }
             }

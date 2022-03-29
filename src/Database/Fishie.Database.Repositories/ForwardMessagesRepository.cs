@@ -25,7 +25,7 @@ namespace Fishie.Database.Repositories
             _logger = logger;
         }
 
-        public async Task AddUpdateAsync(CoreModels.ForwardMessages forwardMessages)
+        public async Task AddForwardMessagesAsync(CoreModels.ForwardMessages forwardMessages)
         {
             try
             {
@@ -42,11 +42,11 @@ namespace Fishie.Database.Repositories
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ForwardMessagesRepository),
-                    nameof(AddUpdateAsync));
+                    nameof(AddForwardMessagesAsync));
             }
         }
 
-        public async Task DeleteUpdateAsync(CoreModels.ForwardMessages forwardMessages)
+        public async Task DeleteForwardMessagesAsync(CoreModels.ForwardMessages forwardMessages)
         {
             try
             {
@@ -67,11 +67,59 @@ namespace Fishie.Database.Repositories
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ForwardMessagesRepository),
-                    nameof(DeleteUpdateAsync));
+                    nameof(DeleteForwardMessagesAsync));
             }
         }
 
-        public async Task<IEnumerable<CoreModels.ForwardMessages?>?> GetAllUpdateAsync()
+        public async Task DeleteForwardChannelByIdAsync(long channnelId)
+        {
+            try
+            {
+                var channnes = _dbContext.ForwardMessages!.Where(c => c.ChannelId == channnelId);
+
+                if (channnes.Any())
+                {
+                    foreach (var channne in channnes)
+                    {
+                        _dbContext.ForwardMessages!.Remove(channne);
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
+                    nameof(ForwardMessagesRepository),
+                    nameof(DeleteForwardChannelByIdAsync));
+            }
+        }
+
+        public async Task DeleteForwardChatByIdAsync(long chatId)
+        {
+            try
+            {
+                var chats = _dbContext.ForwardMessages!.Where(c => c.ChatId == chatId);
+
+                if (chats.Any())
+                {
+                    foreach (var chat in chats)
+                    {
+                        _dbContext.ForwardMessages!.Remove(chat);
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
+                    nameof(ForwardMessagesRepository),
+                    nameof(DeleteForwardChatByIdAsync));
+            }
+        }
+
+
+
+        public async Task<IEnumerable<CoreModels.ForwardMessages?>?> GetAllForwardMessagesAsync()
         {
             try
             {
@@ -84,7 +132,7 @@ namespace Fishie.Database.Repositories
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
                     nameof(ForwardMessages),
-                    nameof(GetAllUpdateAsync));
+                    nameof(GetAllForwardMessagesAsync));
             }
 
             return null;

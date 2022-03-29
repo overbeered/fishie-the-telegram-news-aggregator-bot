@@ -32,11 +32,16 @@ namespace Fishie.Services.TelegramService.Commands
             }
             else
             {
-                //Think about how to delete from ForwardMessages
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    IChannelRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                    await chatRepository.DeleteChannelAsync(action);
+                    IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
+                    IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
+                    var channel = await channelRepository.GetChannelAsync(action);
+                    if (channel != null)
+                    {
+                        await channelRepository.DeleteChannelAsync(action);
+                        await forwardMessagesRepository.DeleteForwardChannelByIdAsync(channel.Id);
+                    }
                 }
             }
         }

@@ -14,19 +14,34 @@ namespace Fishie.Core.Repositories
         /// </summary>
         /// <param name="forwardMessages">Model ForwardMessages</param>
         /// <returns></returns>
-        Task AddUpdateAsync(ForwardMessages forwardMessages);
+        Task AddForwardMessagesAsync(ForwardMessages forwardMessages);
 
         /// <summary>
         /// Deletes a model ForwardMessages
         /// </summary>
         /// <param name="forwardMessages">Model ForwardMessages</param>
         /// <returns></returns>
-        Task DeleteUpdateAsync(ForwardMessages forwardMessages);
+        Task DeleteForwardMessagesAsync(ForwardMessages forwardMessages);
 
         /// <summary>
         /// Returns models ForwardMessages
         /// </summary>
         /// <returns>Model ForwardMessages</returns>
-        Task<IEnumerable<ForwardMessages?>?> GetAllUpdateAsync();
+        Task<IEnumerable<ForwardMessages?>?> GetAllForwardMessagesAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channnelId"></param>
+        /// <returns></returns>
+        Task DeleteForwardChannelByIdAsync(long channnelId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
+        Task DeleteForwardChatByIdAsync(long chatId);
+
     }
 }
