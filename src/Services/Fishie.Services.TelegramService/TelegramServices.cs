@@ -1,4 +1,4 @@
-﻿using Fishie.Core.Configurat;
+﻿using Fishie.Core.Configuration;
 using Fishie.Core.Repositories;
 using Fishie.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,32 +14,36 @@ namespace Fishie.Services.TelegramService
     public class TelegramServices : ITelegramServices
     {
         private readonly ILogger<TelegramServices> _logger;
+        private readonly AdminConfiguration _adminConfiguration;
         private readonly Client _client;
         private readonly СlientConfiguration _сlientConfiguration;
         private readonly ChatConfiguration _chatConfiguration;
+
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly MessagesHandler _messagesHandler;
-        private bool _isAddChatConfiguration;
         public bool Disconnected { get { return _client.Disconnected; } }
 
         public TelegramServices(ILogger<TelegramServices> logger,
+            AdminConfiguration adminConfiguration,
             СlientConfiguration сlientConfiguration,
             ChatConfiguration chatConfiguration,
             IServiceScopeFactory serviceScopeFactory)
         {
             _logger = logger;
+            _adminConfiguration = adminConfiguration;
             _сlientConfiguration = сlientConfiguration;
             _chatConfiguration = chatConfiguration;
             _serviceScopeFactory = serviceScopeFactory;
-            _isAddChatConfiguration = false;
             _client = new Client(Config);
             _client.Update += OnUpdates;
             _messagesHandler = new MessagesHandler(_serviceScopeFactory);
         }
-        
+
         public async Task LoginAsync()
         {
             await _client.LoginUserIfNeeded();
+            await AddAdminConfiguration(_adminConfiguration);
+            await AddChatConfiguration(_chatConfiguration);
         }
 
         public void Reset()
@@ -54,7 +58,6 @@ namespace Fishie.Services.TelegramService
         private async void OnUpdates(IObject obj)
         {
             if (obj is not UpdatesBase updates) return;
-
             foreach (var update in updates.UpdateList)
                 switch (update)
                 {
@@ -71,12 +74,14 @@ namespace Fishie.Services.TelegramService
         {
             try
             {
-                if (!_isAddChatConfiguration) await AddChatConfiguration(_chatConfiguration);
                 switch (messageBase)
                 {
                     case Message m:
-                        var e = m.from_id;
-                        await _messagesHandler!.HandleAsync(_client, m.Peer.ID, m.ID, m.message);
+                        await _messagesHandler!.HandleAsync(_client,
+                            m.From != null ? m.From.ID : null,
+                            m.Peer.ID,
+                            m.ID,
+                            m.message);
                         break;
                 }
             }
@@ -116,27 +121,66 @@ namespace Fishie.Services.TelegramService
         /// <exception cref="Exception"></exception>
         private async Task AddChatConfiguration(ChatConfiguration chatConfiguration)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            try
             {
-                IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
-
-                var search = await _client.Contacts_Search(chatConfiguration.ChatName);
-                if (search == null) throw new Exception($"channel {search} not found");
-
-                foreach (var (_, chat) in search.chats)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    if (((Channel)chat).username == _chatConfiguration.ChatName || chat.Title == _chatConfiguration.ChatName)
+                    IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
+
+                    var search = await _client.Contacts_Search(chatConfiguration.ChatName);
+                    if (search == null) throw new Exception($"channel {search} not found");
+
+                    foreach (var (_, chat) in search.chats)
                     {
-                        var channel = (InputPeerChannel)chat.ToInputPeer();
-                        var coreChannel = new CoreModels.Chat(
-                                channel.channel_id,
-                                ((Channel)chat).username != null ? ((Channel)chat).username : chat.Title,
-                                channel.access_hash);
-                        await chatRepository!.AddChatAsync(coreChannel);
-                        break;
+                        if (((Channel)chat).username == _chatConfiguration.ChatName || chat.Title == _chatConfiguration.ChatName)
+                        {
+                            var channel = (InputPeerChannel)chat.ToInputPeer();
+                            var coreChannel = new CoreModels.Chat(
+                                    channel.channel_id,
+                                    ((Channel)chat).username != null ? ((Channel)chat).username : chat.Title,
+                                    channel.access_hash);
+                            await chatRepository!.AddChatAsync(coreChannel);
+                            break;
+                        }
                     }
                 }
-                _isAddChatConfiguration = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(AddChatConfiguration));
+            }
+        }
+
+
+        private async Task AddAdminConfiguration(AdminConfiguration adminConfiguration)
+        {
+            try
+            {
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    IAdminRepository adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+
+                    var search = await _client.Contacts_Search(adminConfiguration.Username);
+                    if (search == null) throw new Exception($"Username {search} not found");
+
+                    foreach (var (_, user) in search.users)
+                    {
+                        if (user.username == adminConfiguration.Username)
+                        {
+                            var core = new CoreModels.Admin(user.ID, user.first_name, user.last_name, user.username);
+                            await adminRepository!.AddAdminAsync(core);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Services: {ServicesName} in Method: {MethodName},",
+                    nameof(TelegramServices),
+                    nameof(AddAdminConfiguration));
             }
         }
     }

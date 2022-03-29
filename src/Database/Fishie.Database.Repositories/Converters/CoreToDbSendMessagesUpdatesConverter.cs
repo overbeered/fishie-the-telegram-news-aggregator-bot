@@ -1,5 +1,5 @@
-﻿using DbModels = Fishie.Database.Models;
-using CoreModels = Fishie.Core.Models;
+﻿using CoreModels = Fishie.Core.Models;
+using DbModels = Fishie.Database.Models;
 
 namespace Fishie.Database.Repositories.Converters
 {

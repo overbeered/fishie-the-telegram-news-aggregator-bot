@@ -1,7 +1,6 @@
 ﻿using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.ResponseCommands;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using System.Threading.Tasks;
 using WTelegram;
 

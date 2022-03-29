@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Fishie.Server.Configuration
 {
-    internal static class ChatExtension
+    public static class AdminExtension
     {
-        public static void AddChat(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAdmin(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectors = configuration.GetSection("ChatConfiguration").Get<ChatConfiguration>();
+            var connectors = configuration.GetSection("AdminConfiguration").Get<AdminConfiguration>();
 
             services.AddTransient(_ => connectors);
         }

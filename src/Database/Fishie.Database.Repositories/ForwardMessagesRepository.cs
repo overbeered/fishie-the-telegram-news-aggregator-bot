@@ -29,7 +29,7 @@ namespace Fishie.Database.Repositories
         {
             try
             {
-                var isModelExists = await _dbContext.ForwardMessages!.AnyAsync(c => 
+                var isModelExists = await _dbContext.ForwardMessages!.AnyAsync(c =>
                 c.ChannelId == forwardMessages.ChannelId && c.ChatId == forwardMessages.ChatId);
 
                 if (!isModelExists)
@@ -50,7 +50,7 @@ namespace Fishie.Database.Repositories
         {
             try
             {
-                DbModels.ForwardMessages? model = await _dbContext.ForwardMessages!.FirstOrDefaultAsync(c => 
+                DbModels.ForwardMessages? model = await _dbContext.ForwardMessages!.FirstOrDefaultAsync(c =>
                 c.ChannelId == forwardMessages.ChannelId && c.ChatId == forwardMessages.ChatId);
 
                 if (model != null)
@@ -123,7 +123,7 @@ namespace Fishie.Database.Repositories
         {
             try
             {
-                IEnumerable<DbModels.ForwardMessages?> stored = 
+                IEnumerable<DbModels.ForwardMessages?> stored =
                     await _dbContext.ForwardMessages!.ToListAsync();
 
                 return stored.Select(data => CoreToDbSendMessagesUpdatesConverter.ConvertBack(data));

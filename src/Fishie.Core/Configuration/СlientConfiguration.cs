@@ -1,4 +1,4 @@
-﻿namespace Fishie.Core.Configurat
+﻿namespace Fishie.Core.Configuration
 {
     /// <summary>
     /// Сonfigurations for connecting to telegram

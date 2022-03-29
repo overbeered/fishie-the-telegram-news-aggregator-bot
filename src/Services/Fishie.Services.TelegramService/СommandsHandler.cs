@@ -20,6 +20,7 @@ namespace Fishie.Services.TelegramService
             _handlers = new Dictionary<string, ICommand>()
             {
                 {"commands", new ToCommands(serviceScopeFactory) },
+                { "addAdmin", new AddToAdmin(serviceScopeFactory)},
                 {"forward", new Forward(serviceScopeFactory) },
                 {"addChannel", new AddToChannel(serviceScopeFactory) },
                 {"addChat", new AddToChat(serviceScopeFactory) },

@@ -49,7 +49,7 @@ namespace Fishie.Database.Repositories
             try
             {
                 DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Name == channelName);
-                
+
                 if (channel != null)
                 {
                     _dbContext.Channels!.Remove(channel);
@@ -57,7 +57,7 @@ namespace Fishie.Database.Repositories
                 }
                 else
                 {
-                    throw new Exception($"channel name - {channelName} is not found");  
+                    throw new Exception($"channel name - {channelName} is not found");
                 }
             }
             catch (Exception ex)

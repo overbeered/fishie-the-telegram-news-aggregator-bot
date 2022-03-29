@@ -2,16 +2,16 @@
 using Fishie.Core.Services;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories;
-using Fishie.Server.Configurat;
+using Fishie.Server.Configuration;
+using Fishie.Services.TelegramService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
-using Microsoft.EntityFrameworkCore;
-using Fishie.Services.TelegramService;
 using TelegramLoginBackgroundService;
 
 namespace Fishie.Server
@@ -48,6 +48,8 @@ namespace Fishie.Server
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IChannelRepository, ChannelRepository>();
             services.AddTransient<IForwardMessagesRepository, ForwardMessagesRepository>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddAdmin(Configuration);
             services.AddConnectors(Configuration);
             services.AddChat(Configuration);
         }

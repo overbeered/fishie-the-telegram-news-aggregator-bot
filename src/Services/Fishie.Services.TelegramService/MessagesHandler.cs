@@ -30,9 +30,22 @@ namespace Fishie.Services.TelegramService
         /// <param name="idMessage">Message id</param>
         /// <param name="message">Message</param>
         /// <returns></returns>
-        public async Task HandleAsync(Client client, long channelId, int idMessage, string message)
+        public async Task HandleAsync(Client client, long? userId, long channelId, int idMessage, string message)
         {
-            if (message.IndexOf("/") == 0) await _сommandsHandler.HandleAsync(client, channelId, message.Remove(0, 1));
+            if (message.IndexOf("/") == 0) 
+            {
+                if (userId != null)
+                {
+                    using (var scope = _serviceScopeFactory.CreateScope())
+                    {
+                        IAdminRepository adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+                        if (await adminRepository.AdminByIdExistsAsync(userId.Value))
+                        {
+                            await _сommandsHandler.HandleAsync(client, channelId, message.Remove(0, 1));
+                        }
+                    }
+                }
+            }
             await ForwardMessagesAsync(client, channelId, idMessage);
         }
 
