@@ -1,51 +1,53 @@
 ﻿using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using System.Threading.Tasks;
 using TL;
-using WTelegram;
 using CoreModels = Fishie.Core.Models;
 
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.AddChannel
 {
     /// <summary>
     /// Find and add a channel\chat to the database. Example: /addChannel channel name
     /// </summary>
-    public class AddToChannel : ICommand
+    internal class AddChannelCommandHandler : AsyncRequestHandler<AddChannelCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public AddToChannel(IServiceScopeFactory serviceScopeFactory)
+        public AddChannelCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+        protected override async Task Handle(AddChannelCommand request, CancellationToken cancellationToken)
         {
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
                         "Find and add a channel\\chat to the database. Example: /addChannel channel name");
                 }
             }
             else
             {
-                var search = await client.Contacts_Search(action);
+                var search = await request.Client.Contacts_Search(request.Action);
 
                 if (search.chats.Count == 0)
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
-                        $"channel {action} not found");
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
+                        $"channel {request.Action} not found");
                 }
                 else
                 {
                     foreach (var (_, chat) in search.chats)
                     {
-                        if (chat.IsActive && (((Channel)chat).username == action || chat.Title == action))
+                        if (chat.IsActive && (((Channel)chat).username == request.Action || chat.Title == request.Action))
                         {
                             var channel = (InputPeerChannel)chat.ToInputPeer();
                             var coreChannel = new CoreModels.Channel(

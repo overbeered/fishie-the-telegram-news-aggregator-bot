@@ -1,33 +1,33 @@
 ﻿using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using WTelegram;
 
-
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.GetAllChannels
 {
     /// <summary>
     /// Sends a list of channels to the chat. Example: /getAllChannels
     /// </summary>
-    internal class GetAllChannels : ICommand
+    internal class GetAllChannelsCommandHandler : AsyncRequestHandler<DeleteChannelCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public GetAllChannels(IServiceScopeFactory serviceScopeFactory)
+        public GetAllChannelsCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+        protected override async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
         {
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
                         "Sends a list of channels to the chat. Example: /getAllChannels");
                 }
             }
@@ -46,14 +46,16 @@ namespace Fishie.Services.TelegramService.Commands
                             message += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
                         }
 
-                        await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                            chatId,
+                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                            request.Client!,
+                            (long)request.ChatId!,
                             message);
                     }
                     else
                     {
-                        await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                            chatId,
+                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                            request.Client!,
+                            (long)request.ChatId!,
                             "Channels not found");
                     }
                 }

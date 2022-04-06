@@ -1,51 +1,53 @@
 ﻿using Fishie.Core.Models;
 using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using System.Threading.Tasks;
 using TL;
-using WTelegram;
 
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.AddAdmin
 {
     /// <summary>
     /// Find and add a admin to the database. Example: /addAdmin username
     /// </summary>
-    internal class AddToAdmin : ICommand
+    public class AddAdminCommandHandle : AsyncRequestHandler<AddAdminCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public AddToAdmin(IServiceScopeFactory serviceScopeFactory)
+        public AddAdminCommandHandle(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+        protected override async Task Handle(AddAdminCommand request, CancellationToken cancellationToken)
         {
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                       (long)(request.ChatId!),
                         "Find and add a admin to the database. Example: /addAdmin username");
                 }
             }
             else
             {
-                var search = await client.Contacts_Search(action);
+                var search = await request.Client.Contacts_Search(request.Action);
 
                 if (search.users.Count == 0)
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
-                        $"user {action} not found");
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                       (long)(request.ChatId!),
+                        $"user {request.Action} not found");
                 }
                 else
                 {
                     foreach (var (_, user) in search.users)
                     {
-                        if (user.username == action)
+                        if (user.username == request.Action)
                         {
                             using (var scope = _serviceScopeFactory.CreateScope())
                             {

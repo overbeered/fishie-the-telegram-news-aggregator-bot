@@ -1,32 +1,33 @@
 ﻿using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using System.Threading.Tasks;
 using TL;
-using WTelegram;
 
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.Unsubscribe
 {
     /// <summary>
     /// Unsubscribe to the channel from the database. Example: /unsubscribe channel name
     /// </summary>
-    internal class Unsubscribe : ICommand
+    internal class UnsubscribeCommandHandler : AsyncRequestHandler<UnsubscribeCommand>
     {
-
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public Unsubscribe(IServiceScopeFactory serviceScopeFactory)
+        public UnsubscribeCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+
+        protected override async Task Handle(UnsubscribeCommand request, CancellationToken cancellationToken)
         {
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
                         "Unsubscribe to the channel from the database. Example: /unsubscribe channel name");
                 }
             }
@@ -35,17 +36,18 @@ namespace Fishie.Services.TelegramService.Commands
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     IChannelRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                    var channel = await chatRepository.GetChannelAsync(action);
+                    var channel = await chatRepository.GetChannelAsync(request.Action);
 
                     if (channel == null)
                     {
-                        await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                            chatId,
-                            $"channels {action} not found in the database");
+                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                            request.Client!,
+                            (long)request.ChatId!,
+                            $"channels {request.Action} not found in the database");
                     }
                     else
                     {
-                        await client.LeaveChat(new InputChannel()
+                        await request.Client!.LeaveChat(new InputChannel()
                         {
                             channel_id = channel.Id,
                             access_hash = channel.AccessHash

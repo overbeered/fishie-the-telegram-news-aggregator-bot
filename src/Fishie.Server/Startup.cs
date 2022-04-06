@@ -4,6 +4,7 @@ using Fishie.Database.Context;
 using Fishie.Database.Repositories;
 using Fishie.Server.Configuration;
 using Fishie.Services.TelegramService;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,8 @@ namespace Fishie.Server
                        Configuration.GetConnectionString("DefaultConnection");
 
 
+
+            services.AddMediatR(typeof(TelegramServices).Assembly);
 
             services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connectionString));
 

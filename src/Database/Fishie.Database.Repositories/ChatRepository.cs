@@ -1,5 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Core.Repositories;
+﻿using Fishie.Core.Repositories;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +28,9 @@ namespace Fishie.Database.Repositories
         {
             try
             {
-                var isChannelExists = await _dbContext.Chats!.AnyAsync(c => c.Id == chat.Id);
+                var isChatExists = await _dbContext.Chats!.AnyAsync(c => c.Id == chat.Id);
 
-                if (!isChannelExists)
+                if (!isChatExists)
                 {
                     await _dbContext.AddAsync(CoreToDbChatConverter.Convert(chat)!);
                     await _dbContext.SaveChangesAsync();
@@ -40,7 +39,7 @@ namespace Fishie.Database.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(AddChatAsync));
             }
         }
@@ -58,13 +57,13 @@ namespace Fishie.Database.Repositories
                 }
                 else
                 {
-                    throw new Exception($"channel name - {chatName} is not found");
+                    throw new Exception($"chat name - {chatName} is not found");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(DeleteChatAsync));
             }
         }
@@ -82,18 +81,18 @@ namespace Fishie.Database.Repositories
                 }
                 else
                 {
-                    throw new Exception($"channel id - {id} is not found");
+                    throw new Exception($"chat id - {id} is not found");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(DeleteChatByIdAsync));
             }
         }
 
-        public async Task<IEnumerable<Chat?>?> GetAllChatsAsync()
+        public async Task<IEnumerable<CoreModels.Chat?>?> GetAllChatsAsync()
         {
             try
             {
@@ -104,14 +103,14 @@ namespace Fishie.Database.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(GetAllChatsAsync));
             }
 
             return null;
         }
 
-        public async Task<Chat?> GetChatAsync(string chatName)
+        public async Task<CoreModels.Chat?> GetChatAsync(string chatName)
         {
             try
             {
@@ -122,25 +121,25 @@ namespace Fishie.Database.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(GetChatAsync));
             }
 
             return null;
         }
 
-        public async Task<Chat?> GetChatByIdAsync(long id)
+        public async Task<CoreModels.Chat?> GetChatByIdAsync(long id)
         {
             try
             {
-                DbModels.Chat? channel = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Id == id);
+                DbModels.Chat? chat = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Id == id);
 
-                return CoreToDbChatConverter.ConvertBack(channel);
+                return CoreToDbChatConverter.ConvertBack(chat);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
+                    nameof(ChatRepository),
                     nameof(GetChatByIdAsync));
             }
 

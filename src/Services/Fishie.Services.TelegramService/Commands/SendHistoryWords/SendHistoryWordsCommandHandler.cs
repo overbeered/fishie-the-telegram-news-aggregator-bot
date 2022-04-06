@@ -1,43 +1,44 @@
 ﻿using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TL;
-using WTelegram;
 
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.SendHistoryWords
 {
     /// <summary>
-    /// Get the message history from the channel.  Example: /sendMessagesHistory chat name | 5
+    /// Get the message history from the channel by word. Example: /sendHistoryWords chat name | 5 | words
     /// </summary>
-    internal class SendMessagesHistory : ICommand
+    internal class SendHistoryWordsCommandHandler : AsyncRequestHandler<SendHistoryWordsCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public SendMessagesHistory(IServiceScopeFactory serviceScopeFactory)
+        public SendHistoryWordsCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+        protected override async Task Handle(SendHistoryWordsCommand request, CancellationToken cancellationToken)
         {
-
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
-                        "Get the message history from the channel.  Example: /sendMessagesHistory chat name | 5");
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
+                        "Get the message history from the channel by word. Example: /sendHistoryWords chat name | 5 | words");
                 }
             }
             else
             {
-                var channelName = action.Remove(action.IndexOf("|") - 1);
-                var count = int.Parse(action.Remove(0, action.IndexOf("|") + 2));
+                var channelName = request.Action.Remove(request.Action.IndexOf("|") - 1);
+                request.Action = request.Action.Remove(0, request.Action.IndexOf("|") + 2);
+                var count = int.Parse(request.Action.Remove(request.Action.IndexOf("|") - 1));
+                request.Action = request.Action.Remove(0, request.Action.IndexOf("|") + 2);
 
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
@@ -47,15 +48,16 @@ namespace Fishie.Services.TelegramService.Commands
                     var channel = await channelRepository.GetChannelAsync(channelName);
                     if (channel == null)
                     {
-                        await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                            chatId,
+                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                            request.Client!,
+                            (long)request.ChatId!,
                             $"channels {channelName} not found in the database");
                     }
                     else
                     {
                         var messagesIdList = new List<int>();
 
-                        var messages = await client.Messages_GetHistory(new InputChannel()
+                        var messages = await request.Client.Messages_GetHistory(new InputChannel()
                         {
                             channel_id = channel.Id,
                             access_hash = channel.AccessHash
@@ -64,14 +66,14 @@ namespace Fishie.Services.TelegramService.Commands
                         for (int msgNumber = 0; msgNumber < count; msgNumber++)
                         {
                             var message = (Message)messages.Messages[msgNumber];
-                            messagesIdList.Add(message.ID);
+                            if (message.message.IndexOf(request.Action) != -1) messagesIdList.Add(message.ID);
                         }
 
-                        var chat = await chatRepository.GetChatByIdAsync(chatId);
+                        var chat = await chatRepository.GetChatByIdAsync((long)request.ChatId!);
 
                         foreach (var idMessage in messagesIdList)
                         {
-                            await client.Messages_ForwardMessages(new InputChannel()
+                            await request.Client.Messages_ForwardMessages(new InputChannel()
                             { channel_id = channel.Id, access_hash = channel.AccessHash },
                             new int[] { idMessage },
                             new long[] { Random.Shared.Next(int.MinValue, int.MaxValue) },

@@ -5,20 +5,16 @@ using System.Threading.Tasks;
 using TL;
 using WTelegram;
 
-namespace Fishie.Services.TelegramService.Commands.ResponseCommands
+namespace Fishie.Services.TelegramService.Commands
 {
-    internal class ResponseCommand : ICommand
+    /// <summary>
+    /// Chat Response command
+    /// </summary>
+    internal static class ResponseCommand
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-
-        public ResponseCommand(IServiceScopeFactory serviceScopeFactory)
+        public static async Task ExecuteAsync(IServiceScopeFactory serviceScopeFactory, Client client, long chatId, string action)
         {
-            _serviceScopeFactory = serviceScopeFactory;
-        }
-
-        public async Task ExecuteAsync(Client client, long chatId, string action)
-        {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            using (var scope = serviceScopeFactory.CreateScope())
             {
                 IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
                 var chat = await chatRepository.GetChatByIdAsync(chatId);

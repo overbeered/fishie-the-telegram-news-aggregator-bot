@@ -1,31 +1,32 @@
 ﻿using Fishie.Core.Repositories;
-using Fishie.Services.TelegramService.Commands.ResponseCommands;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using System.Threading.Tasks;
-using WTelegram;
 
-namespace Fishie.Services.TelegramService.Commands
+namespace Fishie.Services.TelegramService.Commands.DeleteChannel
 {
     /// <summary>
     /// Delete from the database channel\chat. Example: /deleteChannel channel name
     /// </summary>
-    internal class DeleteToChannel : ICommand
+    internal class DeleteChannelCommandHandler : AsyncRequestHandler<DeleteChannelCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public DeleteToChannel(IServiceScopeFactory serviceScopeFactory)
+        public DeleteChannelCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task ExecuteAsync(Client client, long chatId, string action)
+        protected override async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
         {
-            if (action.IndexOf("--info") != -1)
+            if (request.Action!.IndexOf("--info") != -1)
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    await new ResponseCommand(_serviceScopeFactory).ExecuteAsync(client,
-                        chatId,
+                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                        request.Client!,
+                        (long)request.ChatId!,
                         "Delete from the database channel\\chat. Example: /deleteChannel channel name");
                 }
             }
@@ -35,10 +36,10 @@ namespace Fishie.Services.TelegramService.Commands
                 {
                     IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
                     IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
-                    var channel = await channelRepository.GetChannelAsync(action);
+                    var channel = await channelRepository.GetChannelAsync(request.Action);
                     if (channel != null)
                     {
-                        await channelRepository.DeleteChannelAsync(action);
+                        await channelRepository.DeleteChannelAsync(request.Action);
                         await forwardMessagesRepository.DeleteForwardChannelByIdAsync(channel.Id);
                     }
                 }
