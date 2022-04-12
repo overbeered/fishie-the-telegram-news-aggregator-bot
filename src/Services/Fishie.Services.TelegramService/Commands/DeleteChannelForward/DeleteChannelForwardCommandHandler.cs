@@ -1,31 +1,32 @@
 ﻿using Fishie.Core.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fishie.Services.TelegramService.Commands.DeleteChannel
+namespace Fishie.Services.TelegramService.Commands.DeleteChannelForward
 {
     /// <summary>
-    /// Delete from the database channel\chat. Example: /deleteChannel channel name
+    /// Remove channel tracking. Example: /deleteChannelForward channel name
     /// </summary>
-    internal class DeleteChannelCommandHandler : AsyncRequestHandler<DeleteChannelCommand>
+    internal class DeleteChannelForwardCommandHandler : AsyncRequestHandler<DeleteChannelForwardCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public DeleteChannelCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public DeleteChannelForwardCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        protected override async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
+        protected override async Task Handle(DeleteChannelForwardCommand request, CancellationToken cancellationToken)
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
                 await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
                     request.Client!,
                     (long)request.ChatId!,
-                    "Delete from the database channel\\chat. Example: /deleteChannel channel name");
+                    "Remove channel tracking. Example: /deleteChannelForward channel name");
             }
             else
             {
@@ -36,9 +37,12 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannel
                     var channel = await channelRepository.GetChannelAsync(request.Action);
                     if (channel != null)
                     {
-                        await channelRepository.DeleteChannelAsync(request.Action);
-                        await forwardMessagesRepository.DeleteForwardChannelByIdAsync(channel.Id);
+                        var listSendMessages = await forwardMessagesRepository.GetAllForwardMessagesAsync();
+                        var forwardMessages = listSendMessages!.FirstOrDefault(c =>
+                        c!.ChatId == request.ChatId && c.ChannelId == channel.Id);
+                        if (forwardMessages != null) await forwardMessagesRepository.DeleteForwardMessagesAsync(forwardMessages);
                     }
+
                 }
             }
         }

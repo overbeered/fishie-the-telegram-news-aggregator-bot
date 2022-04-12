@@ -11,7 +11,7 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
     /// <summary>
     /// Find and add a chat to the database. Example: /addChat chat name
     /// </summary>
-    internal class AddChatCommandHandler : AsyncRequestHandler<DeleteChannelCommand>
+    internal class AddChatCommandHandler : AsyncRequestHandler<AddChatCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -20,17 +20,14 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        protected override async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
+        protected override async Task Handle(AddChatCommand request, CancellationToken cancellationToken)
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        "Find and add a channel\\chat to the database. Example: /addChat chat name");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                    (long)request.ChatId!,
+                    "Find and add a chat to the database. Example: /addChat chat name");
             }
             else
             {

@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
     /// Subscribe to the channel from the database. Example: /subscribe channel name
     /// </summary>
-    internal class SubscribeCommand : IRequest
+    internal class SubscribeCommand : Command, IRequest
     {
-        public Client? Client { get; set; }
-        public long? ChatId { get; set; }
-        public string? Action { get; set; }
+        public static readonly string CommandText = "subscribe";
     }
 }

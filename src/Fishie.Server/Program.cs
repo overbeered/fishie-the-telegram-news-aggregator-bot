@@ -16,7 +16,5 @@ namespace Fishie.Server
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        //Mediator Mediart
     }
 }

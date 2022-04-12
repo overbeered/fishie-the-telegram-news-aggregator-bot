@@ -3,6 +3,7 @@ using Fishie.Services.TelegramService.Commands;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,109 +19,69 @@ namespace Fishie.Services.TelegramService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IMediator _mediator;
+        private readonly Dictionary<string, Command> _handlers;
+
         public MessagesHandler(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
         {
             _mediator = mediator;
             _serviceScopeFactory = serviceScopeFactory;
+            _handlers = new Dictionary<string, Command>()
+            {
+                {AddAdminCommand.CommandText, new AddAdminCommand()},
+                {AddChannelCommand.CommandText, new AddChannelCommand()},
+                {AddChatCommand.CommandText, new AddChatCommand()},
+                {DeleteChannelCommand.CommandText, new DeleteChannelCommand()},
+                {GetAllChannelsCommand.CommandText, new GetAllChannelsCommand()},
+                {SubscribeCommand.CommandText, new SubscribeCommand()},
+                {UnsubscribeCommand.CommandText, new UnsubscribeCommand()},
+                {SendHistoryCommand.CommandText, new SendHistoryCommand()},
+                {SendHistoryWordsCommand.CommandText, new SendHistoryWordsCommand()},
+                {ForwardCommand.CommandText, new ForwardCommand()},
+                {GetAllForwardCommand.CommandText, new GetAllForwardCommand()},
+                {DeleteChannelForwardCommand.CommandText, new DeleteChannelForwardCommand()},
+            };
         }
         protected override async Task Handle(MessagesRequest request, CancellationToken cancellationToken)
         {
-            if (request.Message!.IndexOf("/") == 0)
+            try
             {
-                if (request.UserId != null)
+                if (request.Message!.IndexOf("/") == 0)
                 {
-                    using (var scope = _serviceScopeFactory.CreateScope())
+                    if (request.UserId != null)
                     {
-                        IAdminRepository adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
-                        if (await adminRepository.AdminByIdExistsAsync(request.UserId.Value))
+                        using (var scope = _serviceScopeFactory.CreateScope())
                         {
-                            var message = request.Message.Remove(0, 1);
-                            var commandRemove = message.Remove(message.IndexOf(" "));
-                            var action = message.Remove(0, message.IndexOf(" ") + 1);
-
-                            switch (commandRemove)
+                            IAdminRepository adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+                            if (await adminRepository.AdminByIdExistsAsync(request.UserId.Value))
                             {
-                                case "addAdmin":
-                                    await _mediator.Send(new AddAdminCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "addChannel":
-                                    await _mediator.Send(new AddChannelCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "addChat":
-                                    await _mediator.Send(new AddChatCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "deleteChat":
-                                    await _mediator.Send(new DeleteChannelCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "getllChannels":
-                                    await _mediator.Send(new GetAllChannelsCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "subscribe":
-                                    await _mediator.Send(new SubscribeCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "unsubscribe":
-                                    await _mediator.Send(new UnsubscribeCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "sendHistory":
-                                    await _mediator.Send(new SendHistoryCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
-                                case "SendHistoryWords":
-                                    await _mediator.Send(new SendHistoryWordsCommand()
-                                    {
-                                        Client = request.Client,
-                                        ChatId = request.ChatId,
-                                        Action = action,
-                                    });
-                                    break;
+                                string message = request.Message!.Remove(0, 1);
+                                string command = message.IndexOf(" ") != -1 ? message.Remove(message.IndexOf(" ")) : message;
+                                string? action = command != message ? message.Remove(0, message.IndexOf(" ") + 1) : null;
+
+                                //подумать 
+                                _handlers[command].Client = request.Client;
+                                _handlers[command].ChatId = request.ChatId;
+                                _handlers[command].Action = action;
+
+                                await _mediator.Send(_handlers[command]);
                             }
                         }
                     }
                 }
+                else
+                {
+                    await ForwardMessagesAsync(request.Client!, (long)request.ChatId!, (int)request.MessageId!);
+                }
             }
-            else
+            catch (ArgumentOutOfRangeException)
             {
-                await ForwardMessagesAsync(request.Client!, (long)request.ChatId!, (int)request.MessageId!);
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                                    request.Client!,
+                                    (long)request.ChatId!,
+                                    $"Сommand \"{request.Message}\" not found");
+                throw new ArgumentOutOfRangeException();
             }
+
         }
 
         /// <summary>

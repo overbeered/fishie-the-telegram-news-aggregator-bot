@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
     /// Find and add a chat to the database. Example: /addChat chat name
     /// </summary>
-    internal class AddChatCommand : IRequest
+    internal class AddChatCommand : Command, IRequest
     {
-        public Client? Client { get; set; }
-        public long? ChatId { get; set; }
-        public string? Action { get; set; }
+        public static readonly string CommandText = "addChat";
     }
 }

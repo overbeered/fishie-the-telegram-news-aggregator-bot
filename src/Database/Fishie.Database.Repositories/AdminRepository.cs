@@ -47,7 +47,7 @@ namespace Fishie.Database.Repositories
         public async Task<bool> AdminByIdExistsAsync(long id)
         {
             try
-            { 
+            {
                 return await _dbContext.Admins!.AnyAsync(a => a.Id == id);
             }
             catch (Exception ex)

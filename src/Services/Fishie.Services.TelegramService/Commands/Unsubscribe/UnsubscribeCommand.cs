@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
     /// Unsubscribe to the channel from the database. Example: /unsubscribe channel name
     /// </summary>
-    internal class UnsubscribeCommand : IRequest
+    internal class UnsubscribeCommand : Command, IRequest
     {
-        public Client? Client { get; set; }
-        public long? ChatId { get; set; }
-        public string? Action { get; set; }
+        public static readonly string CommandText = "unsubscribe";
     }
 }

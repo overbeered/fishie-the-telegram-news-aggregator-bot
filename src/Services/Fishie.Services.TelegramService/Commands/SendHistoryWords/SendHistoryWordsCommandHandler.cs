@@ -25,13 +25,10 @@ namespace Fishie.Services.TelegramService.Commands.SendHistoryWords
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        "Get the message history from the channel by word. Example: /sendHistoryWords chat name | 5 | words");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                    (long)request.ChatId!,
+                    "Get the message history from the channel by word. Example: /sendHistoryWords chat name | 5 | words");
             }
             else
             {

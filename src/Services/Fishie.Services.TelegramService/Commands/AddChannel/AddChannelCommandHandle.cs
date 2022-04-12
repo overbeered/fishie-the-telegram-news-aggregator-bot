@@ -24,13 +24,10 @@ namespace Fishie.Services.TelegramService.Commands.AddChannel
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        "Find and add a channel\\chat to the database. Example: /addChannel channel name");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                    (long)request.ChatId!,
+                    "Find and add a channel\\chat to the database. Example: /addChannel channel name");
             }
             else
             {

@@ -44,13 +44,13 @@ namespace Fishie.Services.TelegramService
         /// Updating events
         /// </summary>
         /// <param name="obj"></param>
-        private void OnUpdates(IObject obj)
+        private async void OnUpdates(IObject obj)
         {
             if (obj is not UpdatesBase updates) return;
             foreach (var update in updates.UpdateList)
                 switch (update)
                 {
-                    case UpdateNewMessage unm: DisplayMessage(unm.message); break;
+                    case UpdateNewMessage unm: await DisplayMessage(unm.message); break;
                 }
         }
 
@@ -59,14 +59,14 @@ namespace Fishie.Services.TelegramService
         /// </summary>
         /// <param name="messageBase"></param>
         /// <returns></returns>
-        private void DisplayMessage(MessageBase messageBase)
+        private async Task DisplayMessage(MessageBase messageBase)
         {
             try
             {
                 switch (messageBase)
                 {
                     case Message m:
-                        _mediator.Send(new MessagesRequest()
+                        await _mediator.Send(new MessagesRequest()
                         {
                             Client = _client,
                             UserId = m.From != null ? m.From.ID : null,

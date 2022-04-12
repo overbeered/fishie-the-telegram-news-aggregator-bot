@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
     /// Find and add a admin to the database. Example: /addAdmin username
     /// </summary>
-    public class AddAdminCommand : IRequest
+    internal class AddAdminCommand : Command, IRequest
     {
-        public Client? Client { get; set; }
-        public long? ChatId { get; set; }
-        public string? Action { get; set; }
+        public static readonly string CommandText = "addAdmin";
     }
 }

@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using WTelegram;
 
 namespace Fishie.Services.TelegramService.Commands
 {
     /// <summary>
     /// Delete from the database channel\chat. Example: /deleteChannel channel name
     /// </summary>
-    internal class DeleteChannelCommand : IRequest
+    internal class DeleteChannelCommand : Command, IRequest
     {
-        public Client? Client { get; set; }
-        public long? ChatId { get; set; }
-        public string? Action { get; set; }
+        public static readonly string CommandText = "deleteChannel";
     }
 }

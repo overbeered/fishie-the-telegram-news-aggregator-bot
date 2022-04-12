@@ -23,13 +23,10 @@ namespace Fishie.Services.TelegramService.Commands.Subscribe
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        "Subscribe to the channel from the database. Example: /subscribe channel name");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                    (long)request.ChatId!,
+                    "Subscribe to the channel from the database. Example: /subscribe channel name");
             }
             else
             {

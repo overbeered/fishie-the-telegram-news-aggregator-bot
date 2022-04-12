@@ -23,13 +23,10 @@ namespace Fishie.Services.TelegramService.Commands.Unsubscribe
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        "Unsubscribe to the channel from the database. Example: /unsubscribe channel name");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                    (long)request.ChatId!,
+                    "Unsubscribe to the channel from the database. Example: /unsubscribe channel name");
             }
             else
             {

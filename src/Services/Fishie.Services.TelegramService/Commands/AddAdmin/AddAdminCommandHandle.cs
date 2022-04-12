@@ -11,7 +11,7 @@ namespace Fishie.Services.TelegramService.Commands.AddAdmin
     /// <summary>
     /// Find and add a admin to the database. Example: /addAdmin username
     /// </summary>
-    public class AddAdminCommandHandle : AsyncRequestHandler<AddAdminCommand>
+    internal class AddAdminCommandHandle : AsyncRequestHandler<AddAdminCommand>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -24,13 +24,10 @@ namespace Fishie.Services.TelegramService.Commands.AddAdmin
         {
             if (request.Action!.IndexOf("--info") != -1)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                       (long)(request.ChatId!),
-                        "Find and add a admin to the database. Example: /addAdmin username");
-                }
+                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                    request.Client!,
+                   (long)(request.ChatId!),
+                    "Find and add a admin to the database. Example: /addAdmin username");
             }
             else
             {
