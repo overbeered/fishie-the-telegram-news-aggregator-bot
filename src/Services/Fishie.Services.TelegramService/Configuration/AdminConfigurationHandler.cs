@@ -41,8 +41,12 @@ namespace Fishie.Services.TelegramService.Configuration
                         if (user.username == _adminConfiguration.Username)
                         {
                             var core = new Admin(user.ID, user.first_name, user.last_name, user.username);
-                            await adminRepository!.AddAdminAsync(core);
-                            break;
+
+                            if (!await adminRepository.AdminByIdExistsAsync(core.Id))
+                            {
+                                await adminRepository.AddAdminAsync(core);
+                                break;
+                            }
                         }
                     }
                 }

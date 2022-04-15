@@ -1,5 +1,6 @@
 ﻿using Fishie.Core.Models;
 using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
@@ -21,12 +22,11 @@ namespace Fishie.Services.TelegramService.Commands.Forward
 
         protected override async Task Handle(ForwardCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action!.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "Subscribe to message forward. Example: /forward channel name");
+                answer = "Subscribe to message forward. Example: /forward channel name";
             }
             else
             {
@@ -36,21 +36,21 @@ namespace Fishie.Services.TelegramService.Commands.Forward
                     IForwardMessagesRepository sendMessagesUpdatesRepository =
                         scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
 
-                    var channel = await channelRepository!.GetChannelAsync(request.Action);
+                    var channel = await channelRepository!.FindChannelAsync(request.Action);
+                    answer = $"Channel {request.Action} not found in the database";
+                    
+                    if (channel != null)
+                    {
 
-                    if (channel == null)
-                    {
-                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                            request.Client!,
-                            (long)request.ChatId!,
-                            $"Channel {request.Action} not found");
-                    }
-                    else
-                    {
                         await sendMessagesUpdatesRepository.AddForwardMessagesAsync(new ForwardMessages(channel.Id, (long)request.ChatId!));
+                        answer = $"You are subscribed to channel updates {request.Action}";
                     }
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }

@@ -9,13 +9,10 @@ namespace Fishie.Database.Repositories.Converters
         {
             if (core == null) return null;
 
-            return new DbModels.Admin()
-            {
-                Id = core.Id,
-                FirstName = core.FirstName,
-                LastName = core.LastName,
-                Username = core.Username,
-            };
+            return new DbModels.Admin(core.Id,
+                core.FirstName,
+                core.LastName,
+                core.Username);
         }
 
         public static CoreModels.Admin? ConvertBack(DbModels.Admin? db)

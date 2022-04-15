@@ -2,8 +2,6 @@
 using Fishie.Database.Context;
 using Fishie.Database.Repositories.Converters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,135 +13,57 @@ namespace Fishie.Database.Repositories
     public class ChannelRepository : IChannelRepository
     {
         private readonly NpgSqlContext _dbContext;
-        private readonly ILogger<ChannelRepository> _logger;
 
-        public ChannelRepository(NpgSqlContext dbContext,
-            ILogger<ChannelRepository> logger)
+        public ChannelRepository(NpgSqlContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
         }
 
         public async Task AddChannelAsync(CoreModels.Channel channel)
         {
-            try
-            {
-                var isChannelExists = await _dbContext.Channels!.AnyAsync(c => c.Id == channel.Id);
+            await _dbContext.AddAsync(CoreToDbChannelConverter.Convert(channel)!);
 
-                if (!isChannelExists)
-                {
-                    await _dbContext.AddAsync(CoreToDbChannelConverter.Convert(channel)!);
-                    await _dbContext.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(AddChannelAsync));
-            }
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> ChannelByIdExistsAsync(CoreModels.Channel channel)
+        {
+            return await _dbContext.Channels.AnyAsync(c => c.Id == channel.Id && c.AccessHash == channel.AccessHash);
         }
 
         public async Task DeleteChannelAsync(string channelName)
         {
-            try
-            {
-                DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Name == channelName);
+            DbModels.Channel channel = await _dbContext.Channels.FirstAsync(c => c.Name == channelName);
+            _dbContext.Channels.Remove(channel);
 
-                if (channel != null)
-                {
-                    _dbContext.Channels!.Remove(channel);
-                    await _dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception($"channel name - {channelName} is not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(DeleteChannelAsync));
-            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteChannelByIdAsync(long id)
         {
-            try
-            {
-                DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Id == id);
+            DbModels.Channel channel = await _dbContext.Channels.FirstAsync(c => c.Id == id);
+            _dbContext.Channels.Remove(channel);
 
-                if (channel != null)
-                {
-                    _dbContext.Channels!.Remove(channel);
-                    await _dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception($"channel id - {id} is not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(DeleteChannelByIdAsync));
-            }
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<CoreModels.Channel?>?> GetAllChannelsAsync()
+        public async Task<List<CoreModels.Channel?>> FindAllChannelsAsync()
         {
-            try
-            {
-                IEnumerable<DbModels.Channel?> storedChannel = await _dbContext.Channels!.ToListAsync();
-
-                return storedChannel.Select(data => CoreToDbChannelConverter.ConvertBack(data));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(GetAllChannelsAsync));
-            }
-
-            return null;
+            return await _dbContext.Channels.Select(data => CoreToDbChannelConverter.ConvertBack(data)).ToListAsync();
         }
 
-        public async Task<CoreModels.Channel?> GetChannelAsync(string channelName)
+        public async Task<CoreModels.Channel?> FindChannelAsync(string channelName)
         {
-            try
-            {
-                DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Name == channelName);
+            DbModels.Channel? channel = await _dbContext.Channels.FirstOrDefaultAsync(c => c.Name == channelName);
 
-                return CoreToDbChannelConverter.ConvertBack(channel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(GetChannelAsync));
-            }
-
-            return null;
+            return CoreToDbChannelConverter.ConvertBack(channel);
         }
 
-        public async Task<CoreModels.Channel?> GetChannelByIdAsync(long id)
+        public async Task<CoreModels.Channel?> FindChannelByIdAsync(long id)
         {
-            try
-            {
-                DbModels.Channel? channel = await _dbContext.Channels!.FirstOrDefaultAsync(c => c.Id == id);
+            DbModels.Channel? channel = await _dbContext.Channels.FirstOrDefaultAsync(c => c.Id == id);
 
-                return CoreToDbChannelConverter.ConvertBack(channel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(GetChannelByIdAsync));
-            }
-
-            return null;
+            return CoreToDbChannelConverter.ConvertBack(channel);
         }
     }
 }

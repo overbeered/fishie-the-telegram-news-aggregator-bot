@@ -52,9 +52,9 @@ namespace Fishie.Server
             services.AddTransient<IChannelRepository, ChannelRepository>();
             services.AddTransient<IForwardMessagesRepository, ForwardMessagesRepository>();
             services.AddTransient<IAdminRepository, AdminRepository>();
-            services.AddAdmin(Configuration);
-            services.AddConnectors(Configuration);
-            services.AddChat(Configuration);
+            services.AddAdminConfiugration(Configuration);
+            services.AddConnectorsConfiugration(Configuration);
+            services.AddChatConfiugration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

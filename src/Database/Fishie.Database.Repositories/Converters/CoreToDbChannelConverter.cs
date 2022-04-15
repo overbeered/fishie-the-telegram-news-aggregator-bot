@@ -9,12 +9,9 @@ namespace Fishie.Database.Repositories.Converters
         {
             if (coreChannel == null) return null;
 
-            return new DbModels.Channel()
-            {
-                Id = coreChannel.Id,
-                Name = coreChannel.Name,
-                AccessHash = coreChannel.AccessHash,
-            };
+            return new DbModels.Channel(coreChannel.Id,
+                coreChannel.Name,
+                coreChannel.AccessHash);
         }
 
         public static CoreModels.Channel? ConvertBack(DbModels.Channel? dbChannel)

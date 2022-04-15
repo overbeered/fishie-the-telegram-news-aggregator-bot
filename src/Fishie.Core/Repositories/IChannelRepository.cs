@@ -13,41 +13,48 @@ namespace Fishie.Core.Repositories
         /// Adds a channel
         /// </summary>
         /// <param name="channel">Сhannel</param>
-        /// <returns></returns>
+        /// <exception>The channel is already stored in the database</exception>
         Task AddChannelAsync(Channel channel);
 
         /// <summary>
         /// Returns channels
         /// </summary>
-        /// <returns>Channels</returns>
-        Task<IEnumerable<Channel?>?> GetAllChannelsAsync();
+        /// <returns>If it finds it, it will return a Channel list, if not, a null list</returns>
+        Task<List<Channel?>> FindAllChannelsAsync();
 
         /// <summary>
         /// Returns the channel by name
         /// </summary>
         /// <param name="channelName">Channel name</param>
-        /// <returns>Channel</returns>
-        Task<Channel?> GetChannelAsync(string channelName);
+        /// <returns>If it finds it, it will return - Channel, if not - null</returns>
+        Task<Channel?> FindChannelAsync(string channelName);
 
         /// <summary>
         /// Returns the channel by id
         /// </summary>
         /// <param name="id">Channel id</param>
-        /// <returns>Channel</returns>
-        Task<Channel?> GetChannelByIdAsync(long id);
+        /// <returns>If it finds it, it will return - Channel, if not - null</returns>
+        Task<Channel?> FindChannelByIdAsync(long id);
 
         /// <summary>
         /// Deletes a channel by name
         /// </summary>
         /// <param name="channelName">Channel name</param>
-        /// <returns></returns>
+        /// <exception>Does not find a channel with this name in the database</exception>
         Task DeleteChannelAsync(string channelName);
 
         /// <summary>
         /// Deletes a channel by id
         /// </summary>
         /// <param name="id">Channel id</param>
-        /// <returns></returns>
+        /// <exception>Does not find a channel with this id in the database</exception>
         Task DeleteChannelByIdAsync(long id);
+
+        /// <summary>
+        /// Checking availability channel
+        /// </summary>
+        /// <param name="channel">Channel</param>
+        /// <returns>Returns true if at least one element of the database is defined by the condition</returns>
+        Task<bool> ChannelByIdExistsAsync(Channel channel);
     }
 }

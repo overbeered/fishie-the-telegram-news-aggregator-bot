@@ -2,8 +2,6 @@
 using Fishie.Database.Context;
 using Fishie.Database.Repositories.Converters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,135 +13,57 @@ namespace Fishie.Database.Repositories
     public class ChatRepository : IChatRepository
     {
         private readonly NpgSqlContext _dbContext;
-        private readonly ILogger<ChatRepository> _logger;
 
-        public ChatRepository(NpgSqlContext dbContext,
-            ILogger<ChatRepository> logger)
+        public ChatRepository(NpgSqlContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
         }
 
         public async Task AddChatAsync(CoreModels.Chat chat)
         {
-            try
-            {
-                var isChatExists = await _dbContext.Chats!.AnyAsync(c => c.Id == chat.Id);
+            await _dbContext.AddAsync(CoreToDbChatConverter.Convert(chat)!);
 
-                if (!isChatExists)
-                {
-                    await _dbContext.AddAsync(CoreToDbChatConverter.Convert(chat)!);
-                    await _dbContext.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(AddChatAsync));
-            }
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> ChatByIdExistsAsync(CoreModels.Chat chat)
+        {
+            return await _dbContext.Chats.AnyAsync(c => c.Id == chat.Id && c.AccessHash == chat.AccessHash);
         }
 
         public async Task DeleteChatAsync(string chatName)
         {
-            try
-            {
-                DbModels.Chat? chat = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Name == chatName);
+            DbModels.Chat chat = await _dbContext.Chats.FirstAsync(c => c.Name == chatName);
+            _dbContext.Chats.Remove(chat);
 
-                if (chat != null)
-                {
-                    _dbContext.Chats!.Remove(chat);
-                    await _dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception($"chat name - {chatName} is not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(DeleteChatAsync));
-            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteChatByIdAsync(long id)
         {
-            try
-            {
-                DbModels.Chat? chat = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Id == id);
+            DbModels.Chat chat = await _dbContext.Chats.FirstAsync(c => c.Id == id);
+            _dbContext.Chats.Remove(chat);
 
-                if (chat != null)
-                {
-                    _dbContext.Chats!.Remove(chat);
-                    await _dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception($"chat id - {id} is not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(DeleteChatByIdAsync));
-            }
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<CoreModels.Chat?>?> GetAllChatsAsync()
+        public async Task<List<CoreModels.Chat?>> FindAllChatsAsync()
         {
-            try
-            {
-                IEnumerable<DbModels.Chat?> storedChat = await _dbContext.Chats!.ToListAsync();
-
-                return storedChat.Select(data => CoreToDbChatConverter.ConvertBack(data));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(GetAllChatsAsync));
-            }
-
-            return null;
+            return await _dbContext.Chats.Select(data => CoreToDbChatConverter.ConvertBack(data)).ToListAsync();
         }
 
-        public async Task<CoreModels.Chat?> GetChatAsync(string chatName)
+        public async Task<CoreModels.Chat?> FindChatAsync(string chatName)
         {
-            try
-            {
-                DbModels.Chat? chat = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Name == chatName);
+            DbModels.Chat? chat = await _dbContext.Chats.FirstOrDefaultAsync(c => c.Name == chatName);
 
-                return CoreToDbChatConverter.ConvertBack(chat);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(GetChatAsync));
-            }
-
-            return null;
+            return CoreToDbChatConverter.ConvertBack(chat);
         }
 
-        public async Task<CoreModels.Chat?> GetChatByIdAsync(long id)
+        public async Task<CoreModels.Chat?> FindChatByIdAsync(long id)
         {
-            try
-            {
-                DbModels.Chat? chat = await _dbContext.Chats!.FirstOrDefaultAsync(c => c.Id == id);
+            DbModels.Chat? chat = await _dbContext.Chats.FirstOrDefaultAsync(c => c.Id == id);
 
-                return CoreToDbChatConverter.ConvertBack(chat);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChatRepository),
-                    nameof(GetChatByIdAsync));
-            }
-
-            return null;
+            return CoreToDbChatConverter.ConvertBack(chat);
         }
     }
 }

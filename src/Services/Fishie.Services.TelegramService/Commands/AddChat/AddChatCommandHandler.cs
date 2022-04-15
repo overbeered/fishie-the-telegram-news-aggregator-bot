@@ -1,4 +1,5 @@
 ﻿using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
@@ -22,23 +23,18 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
 
         protected override async Task Handle(AddChatCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action!.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "Find and add a chat to the database. Example: /addChat chat name");
+                answer = "Find and add a chat to the database. Example: /addChat chat name";
             }
             else
             {
                 var search = await request.Client.Contacts_Search(request.Action);
-
                 if (search.chats.Count == 0)
                 {
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        $"chat {request.Action} not found");
+                    answer = $"chat {request.Action} not found";
                 }
                 else
                 {
@@ -54,13 +50,23 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
                             using (var scope = _serviceScopeFactory.CreateScope())
                             {
                                 IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
-                                await chatRepository!.AddChatAsync(coreChat);
+
+                                answer = $"The chat {request.Action} has already been added to the database";
+                                if (!await chatRepository.ChatByIdExistsAsync(coreChat))
+                                {
+                                    await chatRepository!.AddChatAsync(coreChat);
+                                    answer = $"The chat {request.Action} has been added to the database";
+                                }
                             }
                             break;
                         }
                     }
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }

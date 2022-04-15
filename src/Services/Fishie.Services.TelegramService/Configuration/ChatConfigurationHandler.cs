@@ -45,8 +45,12 @@ namespace Fishie.Services.TelegramService.Configuration
                                     channel.channel_id,
                                     ((Channel)chat).username != null ? ((Channel)chat).username : chat.Title,
                                     channel.access_hash);
-                            await chatRepository!.AddChatAsync(coreChannel);
-                            break;
+
+                            if (!await chatRepository.ChatByIdExistsAsync(coreChannel))
+                            {
+                                await chatRepository.AddChatAsync(coreChannel);
+                                break;
+                            }
                         }
                     }
                 }

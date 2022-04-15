@@ -9,11 +9,7 @@ namespace Fishie.Database.Repositories.Converters
         {
             if (core == null) return null;
 
-            return new DbModels.ForwardMessages()
-            {
-                ChannelId = core.ChannelId,
-                ChatId = core.ChatId,
-            };
+            return new DbModels.ForwardMessages(core.ChannelId, core.ChatId);
         }
 
         public static CoreModels.ForwardMessages? ConvertBack(DbModels.ForwardMessages? db)

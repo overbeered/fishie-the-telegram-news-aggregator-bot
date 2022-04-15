@@ -1,4 +1,5 @@
 ﻿using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -23,12 +24,11 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
 
         protected override async Task Handle(SendHistoryCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action!.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "Get the message history from the channel. Example: /sendHistory chat name | 5");
+                answer = "Get the message history from the channel. Example: /sendHistory chat name | 5";
             }
             else
             {
@@ -40,13 +40,10 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
                     IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
                     IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
 
-                    var channel = await channelRepository.GetChannelAsync(channelName);
+                    var channel = await channelRepository.FindChannelAsync(channelName);
                     if (channel == null)
                     {
-                        await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                            request.Client!,
-                            (long)request.ChatId!,
-                            $"channels {channelName} not found in the database");
+                        answer = $"Channels {channelName} not found in the database";
                     }
                     else
                     {
@@ -64,8 +61,8 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
                             messagesIdList.Add(message.ID);
                         }
 
-                        var chat = await chatRepository.GetChatByIdAsync((long)request.ChatId!);
-
+                        var chat = await chatRepository.FindChatByIdAsync((long)request.ChatId!);
+                        
                         foreach (var idMessage in messagesIdList)
                         {
                             await request.Client.Messages_ForwardMessages(new InputChannel()
@@ -78,6 +75,10 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
                     }
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }

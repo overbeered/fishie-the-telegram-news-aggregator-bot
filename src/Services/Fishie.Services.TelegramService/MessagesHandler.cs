@@ -1,5 +1,6 @@
 ﻿using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -57,13 +58,28 @@ namespace Fishie.Services.TelegramService
                                 string message = request.Message!.Remove(0, 1);
                                 string command = message.IndexOf(" ") != -1 ? message.Remove(message.IndexOf(" ")) : message;
                                 string? action = command != message ? message.Remove(0, message.IndexOf(" ") + 1) : null;
+                                
+                                if (command == "commands")
+                                {
+                                    string commandKey = " ";
 
-                                //подумать 
-                                _handlers[command].Client = request.Client;
-                                _handlers[command].ChatId = request.ChatId;
-                                _handlers[command].Action = action;
+                                    foreach (var key in _handlers.Keys)
+                                    {
+                                        commandKey += "\n" + key;
+                                    }
 
-                                await _mediator.Send(_handlers[command]);
+                                    await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory,
+                                        request.Client!,
+                                        (long)request.ChatId!,
+                                        commandKey);
+                                }
+                                else
+                                {
+                                    _handlers[command].Client = request.Client;
+                                    _handlers[command].ChatId = request.ChatId;
+                                    _handlers[command].Action = action;
+                                    await _mediator.Send(_handlers[command]);
+                                }
                             }
                         }
                     }
@@ -75,7 +91,7 @@ namespace Fishie.Services.TelegramService
             }
             catch (ArgumentOutOfRangeException)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
+                await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory,
                                     request.Client!,
                                     (long)request.ChatId!,
                                     $"Сommand \"{request.Message}\" not found");
@@ -98,21 +114,21 @@ namespace Fishie.Services.TelegramService
             {
                 IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider
                     .GetRequiredService<IForwardMessagesRepository>();
-                var listSendMessages = await forwardMessagesRepository.GetAllForwardMessagesAsync();
+                var listSendMessages = await forwardMessagesRepository.FindAllForwardMessagesAsync();
 
                 if (listSendMessages != null)
                 {
-                    listSendMessages = listSendMessages!.Where(c => c!.ChannelId == channelId);
+                    listSendMessages = listSendMessages.Where(c => c!.ChannelId == channelId).ToList();
                     IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
                     IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
 
                     foreach (var sendMessages in listSendMessages)
                     {
-                        var chat = await chatRepository.GetChatByIdAsync(sendMessages!.ChatId);
+                        var chat = await chatRepository.FindChatByIdAsync(sendMessages!.ChatId);
 
                         if (chat == null) throw new Exception();
 
-                        var core = await channelRepository.GetChannelByIdAsync(channelId);
+                        var core = await channelRepository.FindChannelByIdAsync(channelId);
 
                         await client.Messages_ForwardMessages(
                             new InputChannel() { channel_id = core!.Id, access_hash = core.AccessHash },

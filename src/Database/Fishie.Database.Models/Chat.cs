@@ -19,5 +19,18 @@
         ///  Telegram access hash channel
         /// </summary>
         public long AccessHash { get; set; }
+
+#nullable disable
+        public Chat() { }
+#nullable restore 
+
+        public Chat(long id,
+            string? name,
+            long accessHash)
+        {
+            Id = id;
+            Name = name;
+            AccessHash = accessHash;
+        }
     }
 }

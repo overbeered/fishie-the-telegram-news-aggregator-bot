@@ -16,5 +16,15 @@
         /// Channel model id
         /// </summary>
         public long ChannelId { get; set; }
+
+#nullable disable
+        public ForwardMessages() { }
+#nullable restore
+
+        public ForwardMessages(long chatId, long channelId)
+        {
+            ChatId = chatId;
+            ChannelId = channelId;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -21,36 +22,34 @@ namespace Fishie.Services.TelegramService.Commands.GetAllChannels
 
         protected override async Task Handle(GetAllChannelsCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action != null && request.Action.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "Sends a list of channels to the chat. Example: /getAllChannels");
+                answer = "Sends a list of channels to the chat. Example: /getAllChannels";
             }
             else
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     IChannelRepository channalRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                    var listChannels = await channalRepository.GetAllChannelsAsync();
-                    string message = "Channels not found";
+                    var listChannels = await channalRepository.FindAllChannelsAsync();
+                    answer = "Channels not found";
 
                     if (listChannels!.Count() != 0)
                     {
-                        message = "";
+                        answer = "";
                         foreach (var channel in listChannels!)
                         {
-                            message += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
+                            answer += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
                         }
                     }
-
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        message);
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }

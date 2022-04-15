@@ -13,35 +13,34 @@ namespace Fishie.Core.Repositories
         /// Adds a model ForwardMessages
         /// </summary>
         /// <param name="forwardMessages">Model ForwardMessages</param>
-        /// <returns></returns>
+        /// <exception>The model ForwardMessages is already stored in the database</exception>
         Task AddForwardMessagesAsync(ForwardMessages forwardMessages);
 
         /// <summary>
         /// Deletes a model ForwardMessages
         /// </summary>
         /// <param name="forwardMessages">Model ForwardMessages</param>
-        /// <returns></returns>
+        /// <exception>Does not find a model ForwardMessages in the database</exception>
         Task DeleteForwardMessagesAsync(ForwardMessages forwardMessages);
 
         /// <summary>
         /// Returns models ForwardMessages
         /// </summary>
-        /// <returns>Model ForwardMessages</returns>
-        Task<IEnumerable<ForwardMessages?>?> GetAllForwardMessagesAsync();
+        /// <returns>If it finds it, it will return a ForwardMessages list, if not, a null list</returns>
+        Task<List<ForwardMessages?>> FindAllForwardMessagesAsync();
 
         /// <summary>
         /// Deletes all channel related entries
         /// </summary>
         /// <param name="channnelId">Channel id</param>
-        /// <returns></returns>
+        /// <exception>Does not find a model ForwardMessages with this id Channel id the database</exception>
         Task DeleteForwardChannelByIdAsync(long channnelId);
 
         /// <summary>
         /// Deletes all chat related entries
         /// </summary>
         /// <param name="chatId">Chat id</param>
-        /// <returns></returns>
+        /// <exception>Does not find a model ForwardMessages with this id Chat id the database</exception>
         Task DeleteForwardChatByIdAsync(long chatId);
-
     }
 }

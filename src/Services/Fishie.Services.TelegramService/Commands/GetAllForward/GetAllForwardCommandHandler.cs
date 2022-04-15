@@ -1,4 +1,5 @@
 ﻿using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -21,12 +22,11 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
 
         protected override async Task Handle(GetAllForwardCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action != null && request.Action.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "List of subscribed channels for sending new messages to the chat. Example: /getAllForwardCommandHandler");
+                answer = "List of subscribed channels for sending new messages to the chat. Example: /getAllForwardCommandHandler";
             }
             else
             {
@@ -34,34 +34,32 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
                 {
                     IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider
                         .GetRequiredService<IForwardMessagesRepository>();
-                    var listSendMessages = await forwardMessagesRepository.GetAllForwardMessagesAsync();
-                    string message = "No tracking for this chat";
+                    var listSendMessages = await forwardMessagesRepository.FindAllForwardMessagesAsync();
+                    answer = "No tracking for this chat";
 
                     if (listSendMessages != null)
                     {
-                        listSendMessages = listSendMessages!.Where(c => c!.ChatId == request.ChatId);
+                        listSendMessages = listSendMessages.Where(c => c!.ChatId == request.ChatId).ToList();
 
                         if (listSendMessages.Count() != 0)
                         {
-                            message = "";
+                            answer = "";
                             IChannelRepository channalRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
 
                             foreach (var list in listSendMessages)
                             {
-                                var channel = await channalRepository.GetChannelByIdAsync(list!.ChannelId);
-                                message += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
+                                var channel = await channalRepository.FindChannelByIdAsync(list!.ChannelId);
+                                answer += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
 
                             }
                         }
                     }
-
-
-                    await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                        request.Client!,
-                        (long)request.ChatId!,
-                        message);
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }

@@ -2,8 +2,6 @@
 using Fishie.Database.Context;
 using Fishie.Database.Repositories.Converters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,109 +13,39 @@ namespace Fishie.Database.Repositories
     public class AdminRepository : IAdminRepository
     {
         private readonly NpgSqlContext _dbContext;
-        private readonly ILogger<AdminRepository> _logger;
 
-        public AdminRepository(NpgSqlContext dbContext,
-            ILogger<AdminRepository> logger)
+        public AdminRepository(NpgSqlContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
         }
 
         public async Task AddAdminAsync(CoreModels.Admin admin)
         {
-            try
-            {
-                var isAdminExists = await _dbContext.Admins!.AnyAsync(a => a.Id == admin.Id);
-
-                if (!isAdminExists)
-                {
-                    await _dbContext.AddAsync(CoreToDbAdminConverter.Convert(admin)!);
-                    await _dbContext.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(AdminRepository),
-                    nameof(AddAdminAsync));
-            }
+            await _dbContext.AddAsync(CoreToDbAdminConverter.Convert(admin)!);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> AdminByIdExistsAsync(long id)
         {
-            try
-            {
-                return await _dbContext.Admins!.AnyAsync(a => a.Id == id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(AdminRepository),
-                    nameof(AdminByIdExistsAsync));
-            }
-
-            return false;
+            return await _dbContext.Admins.AnyAsync(a => a.Id == id);
         }
 
         public async Task DeleteAdminUsernameAsync(string adminUsername)
         {
-            try
-            {
-                DbModels.Admin? admin = await _dbContext.Admins!.FirstOrDefaultAsync(a => a.Username == adminUsername);
-
-                if (admin != null)
-                {
-                    _dbContext.Admins!.Remove(admin);
-                    await _dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception($"Admin name - {admin} is not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(DeleteAdminUsernameAsync));
-            }
+            DbModels.Admin admin = await _dbContext.Admins.FirstAsync(a => a.Username == adminUsername);
+            _dbContext.Admins.Remove(admin);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<CoreModels.Admin?> GetAdminAsync(string adminName)
+        public async Task<CoreModels.Admin?> FindAdminAsync(string firstName)
         {
-            try
-            {
-                DbModels.Admin? admin = await _dbContext.Admins!.FirstOrDefaultAsync(a => a.FirstName == adminName);
-
-                return CoreToDbAdminConverter.ConvertBack(admin);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(GetAdminAsync));
-            }
-
-            return null;
+            DbModels.Admin? admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.FirstName == firstName);
+            return CoreToDbAdminConverter.ConvertBack(admin);
         }
 
-        public async Task<IEnumerable<CoreModels.Admin?>?> GetAllAdminAsync()
+        public async Task<List<CoreModels.Admin?>> FindAllAdminAsync()
         {
-            try
-            {
-                IEnumerable<DbModels.Admin?> stored = await _dbContext.Admins!.ToListAsync();
-
-                return stored.Select(data => CoreToDbAdminConverter.ConvertBack(data));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Repository: {RepositoryName} in Method: {MethodName},",
-                    nameof(ChannelRepository),
-                    nameof(GetAllAdminAsync));
-            }
-
-            return null;
+            return await _dbContext.Admins.Select(data => CoreToDbAdminConverter.ConvertBack(data)).ToListAsync();
         }
     }
 }

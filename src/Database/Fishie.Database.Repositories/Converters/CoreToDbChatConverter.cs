@@ -10,12 +10,9 @@ namespace Fishie.Database.Repositories.Converters
         {
             if (coreChat == null) return null;
 
-            return new DbModels.Chat()
-            {
-                Id = coreChat.Id,
-                Name = coreChat.Name,
-                AccessHash = coreChat.AccessHash,
-            };
+            return new DbModels.Chat(coreChat.Id,
+                coreChat.Name!,
+                coreChat.AccessHash);
         }
 
         public static CoreModels.Chat? ConvertBack(DbModels.Chat? dbChat)

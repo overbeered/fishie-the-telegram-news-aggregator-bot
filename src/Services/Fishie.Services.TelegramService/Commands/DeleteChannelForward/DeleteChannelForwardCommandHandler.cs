@@ -1,4 +1,5 @@
 ﻿using Fishie.Core.Repositories;
+using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -21,12 +22,11 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannelForward
 
         protected override async Task Handle(DeleteChannelForwardCommand request, CancellationToken cancellationToken)
         {
+            string? answer = null;
+
             if (request.Action!.IndexOf("--info") != -1)
             {
-                await ResponseCommand.ExecuteAsync(_serviceScopeFactory,
-                    request.Client!,
-                    (long)request.ChatId!,
-                    "Remove channel tracking. Example: /deleteChannelForward channel name");
+                answer = "Remove channel tracking. Example: /deleteChannelForward channel name";
             }
             else
             {
@@ -34,17 +34,26 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannelForward
                 {
                     IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
                     IForwardMessagesRepository forwardMessagesRepository = scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
-                    var channel = await channelRepository.GetChannelAsync(request.Action);
+                    var channel = await channelRepository.FindChannelAsync(request.Action);
                     if (channel != null)
                     {
-                        var listSendMessages = await forwardMessagesRepository.GetAllForwardMessagesAsync();
+                        var listSendMessages = await forwardMessagesRepository.FindAllForwardMessagesAsync();
                         var forwardMessages = listSendMessages!.FirstOrDefault(c =>
                         c!.ChatId == request.ChatId && c.ChannelId == channel.Id);
-                        if (forwardMessages != null) await forwardMessagesRepository.DeleteForwardMessagesAsync(forwardMessages);
-                    }
 
+                        answer = $"The channel {request.Action} not stored in the surveillance database";
+                        if (forwardMessages != null) 
+                        {
+                            await forwardMessagesRepository.DeleteForwardMessagesAsync(forwardMessages);
+                            answer = $"The channel {request.Action} was removed from tracking";
+                        }
+                    }
                 }
             }
+
+            if (answer != null) await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory, request.Client!,
+                (long)(request.ChatId!),
+                answer);
         }
     }
 }
