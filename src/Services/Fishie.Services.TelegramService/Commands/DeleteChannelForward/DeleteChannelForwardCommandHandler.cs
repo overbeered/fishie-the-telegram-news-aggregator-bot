@@ -42,7 +42,7 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannelForward
                         c!.ChatId == request.ChatId && c.ChannelId == channel.Id);
 
                         answer = $"The channel {request.Action} not stored in the surveillance database";
-                        if (forwardMessages != null) 
+                        if (forwardMessages != null)
                         {
                             await forwardMessagesRepository.DeleteForwardMessagesAsync(forwardMessages);
                             answer = $"The channel {request.Action} was removed from tracking";

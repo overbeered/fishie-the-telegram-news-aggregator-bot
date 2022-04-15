@@ -33,17 +33,21 @@ namespace Fishie.Services.TelegramService.Commands.Forward
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     IChannelRepository channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
-                    IForwardMessagesRepository sendMessagesUpdatesRepository =
+                    IForwardMessagesRepository forwardMessagesRepository =
                         scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
 
                     var channel = await channelRepository!.FindChannelAsync(request.Action);
                     answer = $"Channel {request.Action} not found in the database";
-                    
+
                     if (channel != null)
                     {
-
-                        await sendMessagesUpdatesRepository.AddForwardMessagesAsync(new ForwardMessages(channel.Id, (long)request.ChatId!));
-                        answer = $"You are subscribed to channel updates {request.Action}";
+                        if (!await forwardMessagesRepository.ForwardMessagesExistsAsync(new ForwardMessages(channel.Id, (long)request.ChatId!)))
+                        {
+                            await forwardMessagesRepository.AddForwardMessagesAsync(new ForwardMessages(channel.Id, (long)request.ChatId!));
+                            answer = $"You are subscribed to channel updates {request.Action}";
+                        }
+                        else
+                            answer = $"You have already subscribed to message updates for this channel {request.Action}";
                     }
                 }
             }

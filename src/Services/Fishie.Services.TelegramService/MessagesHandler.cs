@@ -1,6 +1,5 @@
 ﻿using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands;
-using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,6 +27,7 @@ namespace Fishie.Services.TelegramService
             _serviceScopeFactory = serviceScopeFactory;
             _handlers = new Dictionary<string, Command>()
             {
+                {SendCommand.CommandText, new SendCommand()},
                 {AddAdminCommand.CommandText, new AddAdminCommand()},
                 {AddChannelCommand.CommandText, new AddChannelCommand()},
                 {AddChatCommand.CommandText, new AddChatCommand()},
@@ -58,28 +58,21 @@ namespace Fishie.Services.TelegramService
                                 string message = request.Message!.Remove(0, 1);
                                 string command = message.IndexOf(" ") != -1 ? message.Remove(message.IndexOf(" ")) : message;
                                 string? action = command != message ? message.Remove(0, message.IndexOf(" ") + 1) : null;
-                                
+
                                 if (command == "commands")
                                 {
-                                    string commandKey = " ";
+                                    action = " ";
 
                                     foreach (var key in _handlers.Keys)
                                     {
-                                        commandKey += "\n" + key;
+                                        action += "\n" + key;
                                     }
+                                }
 
-                                    await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory,
-                                        request.Client!,
-                                        (long)request.ChatId!,
-                                        commandKey);
-                                }
-                                else
-                                {
-                                    _handlers[command].Client = request.Client;
-                                    _handlers[command].ChatId = request.ChatId;
-                                    _handlers[command].Action = action;
-                                    await _mediator.Send(_handlers[command]);
-                                }
+                                _handlers[command].Client = request.Client;
+                                _handlers[command].ChatId = request.ChatId;
+                                _handlers[command].Action = action;
+                                await _mediator.Send(_handlers[command]);
                             }
                         }
                     }
@@ -89,13 +82,14 @@ namespace Fishie.Services.TelegramService
                     await ForwardMessagesAsync(request.Client!, (long)request.ChatId!, (int)request.MessageId!);
                 }
             }
-            catch (ArgumentOutOfRangeException)
+            catch (KeyNotFoundException)
             {
-                await CommandResponseHelper.ExecuteAsync(_serviceScopeFactory,
-                                    request.Client!,
-                                    (long)request.ChatId!,
-                                    $"Сommand \"{request.Message}\" not found");
-                throw new ArgumentOutOfRangeException();
+                await _mediator.Send(new SendCommand()
+                {
+                    Client = request.Client,
+                    ChatId = request.ChatId,
+                    Action = $"Сommand \"{request.Message}\" not found"
+                });
             }
 
         }

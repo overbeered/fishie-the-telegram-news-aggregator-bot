@@ -21,7 +21,7 @@
         public ForwardMessages() { }
 #nullable restore
 
-        public ForwardMessages(long chatId, long channelId)
+        public ForwardMessages(long channelId, long chatId)
         {
             ChatId = chatId;
             ChannelId = channelId;

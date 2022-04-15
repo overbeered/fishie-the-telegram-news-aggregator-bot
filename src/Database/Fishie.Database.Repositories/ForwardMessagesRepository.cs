@@ -66,5 +66,11 @@ namespace Fishie.Database.Repositories
         {
             return await _dbContext.ForwardMessages.Select(data => CoreToDbSendMessagesUpdatesConverter.ConvertBack(data)).ToListAsync();
         }
+
+        public async Task<bool> ForwardMessagesExistsAsync(CoreModels.ForwardMessages forwardMessages)
+        {
+            return await _dbContext.ForwardMessages.AnyAsync(f => 
+            f.ChannelId == forwardMessages.ChannelId && f.ChatId == forwardMessages.ChatId);
+        }
     }
 }

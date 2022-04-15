@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Fishie.Services.TelegramService.Commands.GetAllForward
 {
     /// <summary>
-    /// List of subscribed channels for sending new messages to the chat. Example: /getAllForwardCommandHandler
+    /// List of subscribed channels for sending new messages to the chat. Example: /getAllForward
     /// </summary>
     internal class GetAllForwardCommandHandler : AsyncRequestHandler<GetAllForwardCommand>
     {
@@ -26,7 +26,7 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
 
             if (request.Action != null && request.Action.IndexOf("--info") != -1)
             {
-                answer = "List of subscribed channels for sending new messages to the chat. Example: /getAllForwardCommandHandler";
+                answer = "List of subscribed channels for sending new messages to the chat. Example: /getAllForward";
             }
             else
             {
@@ -43,14 +43,13 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
 
                         if (listSendMessages.Count() != 0)
                         {
-                            answer = "";
+                            answer = " ";
                             IChannelRepository channalRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
 
                             foreach (var list in listSendMessages)
                             {
                                 var channel = await channalRepository.FindChannelByIdAsync(list!.ChannelId);
                                 answer += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
-
                             }
                         }
                     }

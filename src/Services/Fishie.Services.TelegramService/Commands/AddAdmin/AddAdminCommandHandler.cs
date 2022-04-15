@@ -32,7 +32,7 @@ namespace Fishie.Services.TelegramService.Commands.AddAdmin
             else
             {
                 var search = await request.Client.Contacts_Search(request.Action);
-                
+
                 if (search.users.Count == 0)
                 {
                     answer = $"User {request.Action} not found";

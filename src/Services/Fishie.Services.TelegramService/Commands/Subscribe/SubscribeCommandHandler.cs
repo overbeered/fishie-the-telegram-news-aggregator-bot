@@ -33,7 +33,7 @@ namespace Fishie.Services.TelegramService.Commands.Subscribe
                 {
                     IChannelRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
                     var channel = await chatRepository.FindChannelAsync(request.Action);
-                    
+
                     answer = $"Channels {request.Action} not found in the database";
 
                     if (channel != null)

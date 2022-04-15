@@ -62,7 +62,7 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
                         }
 
                         var chat = await chatRepository.FindChatByIdAsync((long)request.ChatId!);
-                        
+
                         foreach (var idMessage in messagesIdList)
                         {
                             await request.Client.Messages_ForwardMessages(new InputChannel()

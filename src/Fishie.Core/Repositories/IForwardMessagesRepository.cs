@@ -42,5 +42,12 @@ namespace Fishie.Core.Repositories
         /// <param name="chatId">Chat id</param>
         /// <exception>Does not find a model ForwardMessages with this id Chat id the database</exception>
         Task DeleteForwardChatByIdAsync(long chatId);
+
+        /// <summary>
+        /// Checking availability models ForwardMessages
+        /// </summary>
+        /// <param name="forwardMessages">Model ForwardMessages</param>
+        /// <returns>Returns true if at least one element of the database is defined by the condition</returns>
+        Task<bool> ForwardMessagesExistsAsync(ForwardMessages forwardMessages);
     }
 }
