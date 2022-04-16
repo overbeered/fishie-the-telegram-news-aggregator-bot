@@ -45,8 +45,9 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
                             var channel = (InputPeerChannel)chat.ToInputPeer();
                             var coreChat = new CoreModels.Chat(
                                     channel.channel_id,
-                                    ((Channel)chat).username != null ? ((Channel)chat).username : chat.Title,
-                                    channel.access_hash);
+                                    channel.access_hash,
+                                    chat.Title,
+                                    ((Channel)chat).username);
                             using (var scope = _serviceScopeFactory.CreateScope())
                             {
                                 IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();

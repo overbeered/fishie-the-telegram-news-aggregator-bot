@@ -12,6 +12,7 @@ namespace Fishie.Database.Context.Configuration
 
             builder.Property(c => c.Id);
             builder.Property(c => c.Name);
+            builder.Property(c => c.Username);
             builder.Property(c => c.AccessHash);
         }
     }

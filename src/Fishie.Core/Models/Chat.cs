@@ -13,17 +13,22 @@
         /// <summary>
         /// Telegram chat name
         /// </summary>
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
 
+        /// <summary>
+        /// Telegram chat username
+        /// </summary>
+        public string? Username { get; private set; }
         /// <summary>
         ///  Telegram access hash chat
         /// </summary>
         public long AccessHash { get; private set; }
 
-        public Chat(long id, string name, long accessHash)
+        public Chat(long id, long accessHash, string? name, string? username)
         {
             Id = id;
             Name = name;
+            Username = username;
             AccessHash = accessHash;
         }
     }

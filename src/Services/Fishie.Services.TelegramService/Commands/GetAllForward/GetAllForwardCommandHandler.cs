@@ -49,7 +49,7 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
                             foreach (var list in listSendMessages)
                             {
                                 var channel = await channalRepository.FindChannelByIdAsync(list!.ChannelId);
-                                answer += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
+                                answer += "Name: " + channel!.Name + "; Username: " + channel!.Username + "\n";
                             }
                         }
                     }

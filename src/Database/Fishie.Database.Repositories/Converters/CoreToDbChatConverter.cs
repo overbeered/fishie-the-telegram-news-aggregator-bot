@@ -11,8 +11,9 @@ namespace Fishie.Database.Repositories.Converters
             if (coreChat == null) return null;
 
             return new DbModels.Chat(coreChat.Id,
-                coreChat.Name!,
-                coreChat.AccessHash);
+                coreChat.AccessHash,
+                coreChat.Name,
+                coreChat.Username);
         }
 
         public static CoreModels.Chat? ConvertBack(DbModels.Chat? dbChat)
@@ -20,8 +21,9 @@ namespace Fishie.Database.Repositories.Converters
             if (dbChat == null) return null;
 
             return new CoreModels.Chat(dbChat.Id,
-                dbChat.Name!,
-                dbChat.AccessHash);
+                dbChat.AccessHash,
+                dbChat.Name,
+                dbChat.Username);
         }
     }
 }

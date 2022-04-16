@@ -43,8 +43,9 @@ namespace Fishie.Services.TelegramService.Configuration
                             var channel = (InputPeerChannel)chat.ToInputPeer();
                             var coreChannel = new CoreModels.Chat(
                                     channel.channel_id,
-                                    ((Channel)chat).username != null ? ((Channel)chat).username : chat.Title,
-                                    channel.access_hash);
+                                    channel.access_hash,
+                                    chat.Title,
+                                    ((Channel)chat).username);
 
                             if (!await chatRepository.ChatByIdExistsAsync(coreChannel))
                             {

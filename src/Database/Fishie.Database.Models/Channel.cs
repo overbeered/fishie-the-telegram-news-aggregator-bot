@@ -6,14 +6,19 @@
     public class Channel
     {
         /// <summary>
-        /// Telegram id channel
+        /// Telegram channel id
         /// </summary>
         public long Id { get; set; }
 
         /// <summary>
-        /// Telegram name channel
+        /// Telegram channel name
         /// </summary>
         public string? Name { get; set; }
+
+        /// <summary>
+        /// Telegram channel username
+        /// </summary>
+        public string? Username { get; private set; }
 
         /// <summary>
         ///  Telegram access hash channel
@@ -24,12 +29,11 @@
         public Channel() { }
 #nullable restore 
 
-        public Channel(long id,
-            string? name,
-            long accessHash)
+        public Channel(long id, long accessHash, string? name, string? username)
         {
             Id = id;
             Name = name;
+            Username = username;
             AccessHash = accessHash;
         }
     }

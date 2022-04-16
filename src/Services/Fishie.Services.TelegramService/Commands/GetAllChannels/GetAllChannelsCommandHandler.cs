@@ -41,7 +41,7 @@ namespace Fishie.Services.TelegramService.Commands.GetAllChannels
                         answer = "";
                         foreach (var channel in listChannels!)
                         {
-                            answer += "Id: " + channel!.Id + " Name: " + channel!.Name + " AccessHash: " + channel.AccessHash + "\n";
+                            answer += "Name: " + channel!.Name + "; Username: " + channel!.Username + "\n";
                         }
                     }
                 }
