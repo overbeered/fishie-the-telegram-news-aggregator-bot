@@ -42,7 +42,7 @@ namespace Fishie.Services.TelegramService
                 {GetAllForwardCommand.CommandText, new GetAllForwardCommand()},
                 {DeleteChannelForwardCommand.CommandText, new DeleteChannelForwardCommand()},
             };
-            _disposableResource = disposableResource ?? throw new ArgumentNullException(nameof(disposableResource));
+            _disposableResource = disposableResource;
         }
 
         public void Dispose()
