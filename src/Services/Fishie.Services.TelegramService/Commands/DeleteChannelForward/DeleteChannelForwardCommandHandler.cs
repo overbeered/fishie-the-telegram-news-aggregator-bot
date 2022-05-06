@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +13,20 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannelForward
     /// <summary>
     /// Remove channel tracking. Example: /deleteChannelForward channel name
     /// </summary>
-    internal class DeleteChannelForwardCommandHandler : AsyncRequestHandler<DeleteChannelForwardCommand>
+    internal class DeleteChannelForwardCommandHandler : AsyncRequestHandler<DeleteChannelForwardCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public DeleteChannelForwardCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public DeleteChannelForwardCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(DeleteChannelForwardCommand request, CancellationToken cancellationToken)

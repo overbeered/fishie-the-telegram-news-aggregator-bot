@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +13,20 @@ namespace Fishie.Services.TelegramService.Commands.GetAllForward
     /// <summary>
     /// List of subscribed channels for sending new messages to the chat. Example: /getAllForward
     /// </summary>
-    internal class GetAllForwardCommandHandler : AsyncRequestHandler<GetAllForwardCommand>
+    internal class GetAllForwardCommandHandler : AsyncRequestHandler<GetAllForwardCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public GetAllForwardCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public GetAllForwardCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(GetAllForwardCommand request, CancellationToken cancellationToken)

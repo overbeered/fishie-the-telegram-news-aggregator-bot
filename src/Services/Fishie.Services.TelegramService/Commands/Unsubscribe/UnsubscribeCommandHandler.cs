@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TL;
@@ -11,13 +13,20 @@ namespace Fishie.Services.TelegramService.Commands.Unsubscribe
     /// <summary>
     /// Unsubscribe to the channel from the database. Example: /unsubscribe channel name
     /// </summary>
-    internal class UnsubscribeCommandHandler : AsyncRequestHandler<UnsubscribeCommand>
+    internal class UnsubscribeCommandHandler : AsyncRequestHandler<UnsubscribeCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public UnsubscribeCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public UnsubscribeCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(UnsubscribeCommand request, CancellationToken cancellationToken)

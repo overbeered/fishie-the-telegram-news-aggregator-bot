@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,13 +12,20 @@ namespace Fishie.Services.TelegramService.Commands.DeleteChannel
     /// <summary>
     /// Delete from the database channel\chat. Example: /deleteChannel channel name
     /// </summary>
-    internal class DeleteChannelCommandHandler : AsyncRequestHandler<DeleteChannelCommand>
+    internal class DeleteChannelCommandHandler : AsyncRequestHandler<DeleteChannelCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public DeleteChannelCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public DeleteChannelCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)

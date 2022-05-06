@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TL;
@@ -12,13 +14,20 @@ namespace Fishie.Services.TelegramService.Commands.AddChat
     /// <summary>
     /// Find and add a chat to the database. Example: /addChat chat name
     /// </summary>
-    internal class AddChatCommandHandler : AsyncRequestHandler<AddChatCommand>
+    internal class AddChatCommandHandler : AsyncRequestHandler<AddChatCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public AddChatCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public AddChatCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(AddChatCommand request, CancellationToken cancellationToken)

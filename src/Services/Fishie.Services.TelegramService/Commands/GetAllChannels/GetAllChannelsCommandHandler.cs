@@ -1,7 +1,9 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +13,20 @@ namespace Fishie.Services.TelegramService.Commands.GetAllChannels
     /// <summary>
     /// Sends a list of channels to the chat. Example: /getAllChannels
     /// </summary>
-    internal class GetAllChannelsCommandHandler : AsyncRequestHandler<GetAllChannelsCommand>
+    internal class GetAllChannelsCommandHandler : AsyncRequestHandler<GetAllChannelsCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public GetAllChannelsCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public GetAllChannelsCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(GetAllChannelsCommand request, CancellationToken cancellationToken)

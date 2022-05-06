@@ -1,4 +1,5 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,13 +16,13 @@ namespace Fishie.Services.TelegramService
     /// <summary>
     /// Message Handler
     /// </summary>
-    internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
+    internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IMediator _mediator;
         private readonly Dictionary<string, Command> _handlers;
-
-        public MessagesHandler(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
+        private readonly IDisposableResource _disposableResource;
+        public MessagesHandler(IMediator mediator, IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _mediator = mediator;
             _serviceScopeFactory = serviceScopeFactory;
@@ -41,7 +42,14 @@ namespace Fishie.Services.TelegramService
                 {GetAllForwardCommand.CommandText, new GetAllForwardCommand()},
                 {DeleteChannelForwardCommand.CommandText, new DeleteChannelForwardCommand()},
             };
+            _disposableResource = disposableResource ?? throw new ArgumentNullException(nameof(disposableResource));
         }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
+        }
+
         protected override async Task Handle(MessagesRequest request, CancellationToken cancellationToken)
         {
             try
@@ -68,7 +76,6 @@ namespace Fishie.Services.TelegramService
                                         action += "\n" + key;
                                     }
                                 }
-
                                 _handlers[command].Client = request.Client;
                                 _handlers[command].ChatId = request.ChatId;
                                 _handlers[command].Action = action;

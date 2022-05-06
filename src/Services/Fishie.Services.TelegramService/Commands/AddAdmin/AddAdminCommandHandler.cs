@@ -1,8 +1,10 @@
-﻿using Fishie.Core.Models;
+﻿using Fishie.Core;
+using Fishie.Core.Models;
 using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TL;
@@ -12,13 +14,20 @@ namespace Fishie.Services.TelegramService.Commands.AddAdmin
     /// <summary>
     /// Find and add a admin to the database. Example: /addAdmin username
     /// </summary>
-    internal class AddAdminCommandHandler : AsyncRequestHandler<AddAdminCommand>
+    internal class AddAdminCommandHandler : AsyncRequestHandler<AddAdminCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public AddAdminCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public AddAdminCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(AddAdminCommand request, CancellationToken cancellationToken)

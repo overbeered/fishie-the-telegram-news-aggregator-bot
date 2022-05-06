@@ -1,4 +1,5 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Services.TelegramService.Commands.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,13 +14,20 @@ namespace Fishie.Services.TelegramService.Commands.SendHistory
     /// <summary>
     /// Get the message history from the channel.  Example: /sendMessagesHistory chat name | 5
     /// </summary>
-    internal class SendHistoryCommandHandler : AsyncRequestHandler<SendHistoryCommand>
+    internal class SendHistoryCommandHandler : AsyncRequestHandler<SendHistoryCommand>, IDisposable
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IDisposableResource _disposableResource;
 
-        public SendHistoryCommandHandler(IServiceScopeFactory serviceScopeFactory)
+        public SendHistoryCommandHandler(IServiceScopeFactory serviceScopeFactory, IDisposableResource disposableResource)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _disposableResource = disposableResource;
+        }
+
+        public void Dispose()
+        {
+            _disposableResource?.Dispose();
         }
 
         protected override async Task Handle(SendHistoryCommand request, CancellationToken cancellationToken)

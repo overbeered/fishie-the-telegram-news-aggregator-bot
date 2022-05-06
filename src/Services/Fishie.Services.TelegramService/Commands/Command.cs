@@ -11,8 +11,5 @@ namespace Fishie.Services.TelegramService.Commands
         public long? ChatId { get; set; }
         public string? Action { get; set; }
 
-        //подумать 
-
-        //public static abstract string CommandText { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Fishie.Core.Repositories;
+﻿using Fishie.Core;
+using Fishie.Core.Repositories;
 using Fishie.Core.Services;
 using Fishie.Database.Context;
 using Fishie.Database.Repositories;
@@ -52,6 +53,7 @@ namespace Fishie.Server
             services.AddTransient<IChannelRepository, ChannelRepository>();
             services.AddTransient<IForwardMessagesRepository, ForwardMessagesRepository>();
             services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IDisposableResource, DisposableResource>();
             services.AddAdminConfiugration(Configuration);
             services.AddConnectorsConfiugration(Configuration);
             services.AddChatConfiugration(Configuration);
