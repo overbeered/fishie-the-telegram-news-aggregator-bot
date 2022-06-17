@@ -1,5 +1,4 @@
 ﻿using Fishie.Core.Services;
-using Fishie.Services.TelegramService;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading;
@@ -12,10 +11,10 @@ namespace TelegramLoginBackgroundService
     /// </summary>
     public class TelegramLoginBackgroundServices : IHostedService
     {
-        private readonly ILogger<TelegramServices> _logger;
+        private readonly ILogger<TelegramLoginBackgroundServices> _logger;
         private readonly ITelegramServices _telegramServices;
 
-        public TelegramLoginBackgroundServices(ILogger<TelegramServices> logger,
+        public TelegramLoginBackgroundServices(ILogger<TelegramLoginBackgroundServices> logger,
             ITelegramServices telegramServices)
         {
             _logger = logger;
