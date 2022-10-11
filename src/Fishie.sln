@@ -15,6 +15,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Database.Repositorie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Core", "Fishie.Core\Fishie.Core.csproj", "{F20B02D0-C2AF-43A2-9F8D-F4DA1BD4178E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{D6A1C105-7912-446A-B929-1958BADCB535}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.TelegramService", "Services\Fishie.Services.TelegramService\Fishie.Services.TelegramService.csproj", "{3213447C-11AC-4499-BE67-9F2D8E5D45C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Background", "Background", "{824C433F-8129-475D-B922-E9AC3C7AAC0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fishie.Services.Background.TelegramLoginBackgroundServices", "Services\Background\Fishie.Services.Background.TelegramLoginBackgroundServices\Fishie.Services.Background.TelegramLoginBackgroundServices.csproj", "{1D806193-13CC-4A4F-8BDE-C15B5B29520A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{501BE79E-F680-4FAB-A93A-3437215E64E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{A6EEFE04-8ABF-4FDC-B7E7-D4953AF7C10D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fishie.Tests.Database.RepositoriesTests", "Tests\Database\Fishie.Tests.Database.RepositoriesTests\Fishie.Tests.Database.RepositoriesTests.csproj", "{CB53B668-F11F-46E3-B22D-5C38446FF0AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +55,18 @@ Global
 		{F20B02D0-C2AF-43A2-9F8D-F4DA1BD4178E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F20B02D0-C2AF-43A2-9F8D-F4DA1BD4178E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F20B02D0-C2AF-43A2-9F8D-F4DA1BD4178E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3213447C-11AC-4499-BE67-9F2D8E5D45C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3213447C-11AC-4499-BE67-9F2D8E5D45C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3213447C-11AC-4499-BE67-9F2D8E5D45C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3213447C-11AC-4499-BE67-9F2D8E5D45C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D806193-13CC-4A4F-8BDE-C15B5B29520A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D806193-13CC-4A4F-8BDE-C15B5B29520A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D806193-13CC-4A4F-8BDE-C15B5B29520A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D806193-13CC-4A4F-8BDE-C15B5B29520A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB53B668-F11F-46E3-B22D-5C38446FF0AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB53B668-F11F-46E3-B22D-5C38446FF0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB53B668-F11F-46E3-B22D-5C38446FF0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB53B668-F11F-46E3-B22D-5C38446FF0AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +75,11 @@ Global
 		{AA30C942-DFB2-4985-B757-08B72390D058} = {7E037F54-F33C-47EC-B5DF-08F5018509F6}
 		{A64E5BCF-1AC9-478D-B036-CFD66F668CEF} = {7E037F54-F33C-47EC-B5DF-08F5018509F6}
 		{56FEA9F5-7A62-48CE-B07E-E86CD2A79411} = {7E037F54-F33C-47EC-B5DF-08F5018509F6}
+		{3213447C-11AC-4499-BE67-9F2D8E5D45C6} = {D6A1C105-7912-446A-B929-1958BADCB535}
+		{824C433F-8129-475D-B922-E9AC3C7AAC0F} = {D6A1C105-7912-446A-B929-1958BADCB535}
+		{1D806193-13CC-4A4F-8BDE-C15B5B29520A} = {824C433F-8129-475D-B922-E9AC3C7AAC0F}
+		{A6EEFE04-8ABF-4FDC-B7E7-D4953AF7C10D} = {501BE79E-F680-4FAB-A93A-3437215E64E9}
+		{CB53B668-F11F-46E3-B22D-5C38446FF0AF} = {A6EEFE04-8ABF-4FDC-B7E7-D4953AF7C10D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBFCC34F-9950-4B2A-A0A7-8B7A4C5FE38A}
