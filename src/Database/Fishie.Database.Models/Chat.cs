@@ -25,6 +25,9 @@ public class Chat
     /// </summary>
     public long AccessHash { get; set; }
 
+    /// <summary>
+    /// The relationship of the collection "one to many"
+    /// </summary>
     public ICollection<ForwardMessages> ForwardMessages { get; set; }
 
 #nullable disable

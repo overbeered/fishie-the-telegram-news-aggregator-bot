@@ -29,7 +29,7 @@ public class ChatRepository : IChatRepository
             .AnyAsync(c => c.Id == chat.Id && c.AccessHash == chat.AccessHash);
     }
 
-    public async Task DeleteAsync(string chatName)
+    public async Task RemoveAsync(string chatName)
     {
         DbModels.Chat chat = await _dbContext.Chats.FirstAsync(c => c.Name == chatName);
         _dbContext.Chats.Remove(chat);
@@ -37,7 +37,7 @@ public class ChatRepository : IChatRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(long id)
+    public async Task RemoveAsync(long id)
     {
         DbModels.Chat chat = await _dbContext.Chats.FirstAsync(c => c.Id == id);
         _dbContext.Chats.Remove(chat);

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fishie.Database.Context.Configuration;
 
+/// <summary>
+/// Configuration of the channel model
+/// </summary>
 internal class ChannelConfiguration : IEntityTypeConfiguration<Channel>
 {
     public void Configure(EntityTypeBuilder<Channel> builder)

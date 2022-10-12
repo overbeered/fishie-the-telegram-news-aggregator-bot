@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Fishie.Database.Context;
 
 #nullable disable
+
+/// <summary>
+/// Context for a PostgreSQL database
+/// </summary>
 public class NpgSqlContext : DbContext
 {
     public DbSet<Channel> Channels { get; set; }

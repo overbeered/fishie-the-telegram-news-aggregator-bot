@@ -1,7 +1,7 @@
 ﻿namespace Fishie.Core.Models;
 
 /// <summary>
-/// Telegram chat listening model
+/// Telegram chat model
 /// </summary>
 public class Chat
 {
@@ -19,6 +19,7 @@ public class Chat
     /// Telegram chat username
     /// </summary>
     public string? Username { get; private set; }
+
     /// <summary>
     ///  Telegram access hash chat
     /// </summary>

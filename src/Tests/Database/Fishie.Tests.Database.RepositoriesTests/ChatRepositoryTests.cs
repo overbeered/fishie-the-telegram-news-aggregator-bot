@@ -1,9 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Database.Context;
-using Fishie.Database.Repositories;
-using Microsoft.EntityFrameworkCore;
-
-namespace Fishie.Tests.Database.RepositoriesTests;
+﻿namespace Fishie.Tests.Database.RepositoriesTests;
 
 public class ChatRepositoryTests
 {
@@ -49,7 +44,7 @@ public class ChatRepositoryTests
 
         // Act
         var resultTrue = await _chatRepository.ExistsAsync(chat);
-        await _chatRepository.DeleteAsync(chat.Name!);
+        await _chatRepository.RemoveAsync(chat.Name!);
         var resultFalse = await _chatRepository.ExistsAsync(chat);
 
         // Assert
@@ -66,7 +61,7 @@ public class ChatRepositoryTests
 
         // Act
         var resultTrue = await _chatRepository.ExistsAsync(chat);
-        await _chatRepository.DeleteAsync(chat.Id!);
+        await _chatRepository.RemoveAsync(chat.Id!);
         var resultFalse = await _chatRepository.ExistsAsync(chat);
 
         // Assert

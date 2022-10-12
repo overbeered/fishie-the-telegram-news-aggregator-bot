@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fishie.Database.Context.Configuration;
 
+/// <summary>
+/// Configuration of the chat model
+/// </summary>
 internal class ChatConfiguration : IEntityTypeConfiguration<Chat>
 {
     public void Configure(EntityTypeBuilder<Chat> builder)

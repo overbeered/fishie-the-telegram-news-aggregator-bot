@@ -1,9 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Database.Context;
-using Fishie.Database.Repositories;
-using Microsoft.EntityFrameworkCore;
-
-namespace Fishie.Tests.Database.RepositoriesTests;
+﻿namespace Fishie.Tests.Database.RepositoriesTests;
 
 public class ChannelRepositoryTests
 {
@@ -49,7 +44,7 @@ public class ChannelRepositoryTests
 
         // Act
         var resultTrue = await _channelRepository.ExistsAsync(channel);
-        await _channelRepository.DeleteAsync(channel.Username!);
+        await _channelRepository.RemoveAsync(channel.Username!);
         var resultFalse = await _channelRepository.ExistsAsync(channel);
 
         // Assert
@@ -66,7 +61,7 @@ public class ChannelRepositoryTests
 
         // Act
         var resultTrue = await _channelRepository.ExistsAsync(channel);
-        await _channelRepository.DeleteAsync(channel.Id!);
+        await _channelRepository.RemoveAsync(channel.Id!);
         var resultFalse = await _channelRepository.ExistsAsync(channel);
 
         // Assert

@@ -9,12 +9,16 @@ using WTelegram;
 
 namespace Fishie.Services.TelegramService.Configuration;
 
+/// <summary>
+/// Admin configuration, search and adding to the database
+/// </summary>
 internal class AdminConfigurationHandler : INotificationHandler<ConfigurationNotification>
 {
     private readonly ILogger<AdminConfigurationHandler> _logger;
     private readonly AdminConfiguration _adminConfiguration;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly Client _client;
+
     public AdminConfigurationHandler(ILogger<AdminConfigurationHandler> logger,
         AdminConfiguration adminConfiguration,
         IServiceScopeFactory serviceScopeFactory,
@@ -31,9 +35,10 @@ internal class AdminConfigurationHandler : INotificationHandler<ConfigurationNot
         try
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            IAdminRepository adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+            var adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
 
             var search = await _client.Contacts_Search(_adminConfiguration.Username);
+           
             if (search == null) throw new Exception($"Username {search} not found");
 
             foreach (var (_, user) in search.users)

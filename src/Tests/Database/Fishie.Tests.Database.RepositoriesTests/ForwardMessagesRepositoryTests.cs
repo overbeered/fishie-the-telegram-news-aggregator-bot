@@ -1,9 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Database.Context;
-using Fishie.Database.Repositories;
-using Microsoft.EntityFrameworkCore;
-
-namespace Fishie.Tests.Database.RepositoriesTests;
+﻿namespace Fishie.Tests.Database.RepositoriesTests;
 
 public class ForwardMessagesRepositoryTests
 {
@@ -69,7 +64,7 @@ public class ForwardMessagesRepositoryTests
 
         // Act
         var resultTrue = await _forwardMessagesRepository.ExistsAsync(forward);
-        await _forwardMessagesRepository.DeleteAsync(forward);
+        await _forwardMessagesRepository.RemoveAsync(forward);
         var resultFalse = await _forwardMessagesRepository.ExistsAsync(forward);
 
         // Assert
@@ -94,7 +89,7 @@ public class ForwardMessagesRepositoryTests
         var resultTrue2 = await _forwardMessagesRepository.ChannelIdExistsAsync(forward2.ChannelId);
         var resultTrue3 = await _forwardMessagesRepository.ChannelIdExistsAsync(forward3.ChannelId);
 
-        await _forwardMessagesRepository.DeleteChannelIdAsync(forward1.ChannelId);
+        await _forwardMessagesRepository.RemoveChannelIdAsync(forward1.ChannelId);
 
         var resultFalse1 = await _forwardMessagesRepository.ChannelIdExistsAsync(forward1.ChannelId);
         var resultFalse2 = await _forwardMessagesRepository.ChannelIdExistsAsync(forward2.ChannelId);
@@ -128,7 +123,7 @@ public class ForwardMessagesRepositoryTests
         var resultTrue2 = await _forwardMessagesRepository.ChatIdExistsAsync(forward2.ChatId);
         var resultTrue3 = await _forwardMessagesRepository.ChatIdExistsAsync(forward3.ChatId);
 
-        await _forwardMessagesRepository.DeleteChatIdAsync(forward1.ChannelId);
+        await _forwardMessagesRepository.RemoveChatIdAsync(forward1.ChannelId);
 
         var resultFalse1 = await _forwardMessagesRepository.ChatIdExistsAsync(forward1.ChatId);
         var resultFalse2 = await _forwardMessagesRepository.ChatIdExistsAsync(forward2.ChatId);

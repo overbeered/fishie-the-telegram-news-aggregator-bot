@@ -14,6 +14,7 @@ public class TelegramServices : ITelegramServices
     private readonly ILogger<TelegramServices> _logger;
     private readonly Client _client;
     private readonly IMediator _mediator;
+
     public TelegramServices(ILogger<TelegramServices> logger,
         Client client,
         IMediator mediator)
@@ -38,7 +39,6 @@ public class TelegramServices : ITelegramServices
     /// <summary>
     /// Updating events
     /// </summary>
-    /// <param name="obj"></param>
     private async Task OnUpdates(IObject obj)
     {
         if (obj is not UpdatesBase updates) return;
@@ -52,8 +52,7 @@ public class TelegramServices : ITelegramServices
     /// <summary>
     /// Processes messages
     /// </summary>
-    /// <param name="messageBase"></param>
-    /// <returns></returns>
+    /// <param name="messageBase">Describing a message</param>
     private async Task DisplayMessageAsync(MessageBase messageBase)
     {
         try

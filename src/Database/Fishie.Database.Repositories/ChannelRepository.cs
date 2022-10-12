@@ -28,7 +28,7 @@ public class ChannelRepository : IChannelRepository
             .AnyAsync(c => c.Id == channel.Id && c.AccessHash == channel.AccessHash);
     }
 
-    public async Task DeleteAsync(string username)
+    public async Task RemoveAsync(string username)
     {
         DbModels.Channel channel = await _dbContext.Channels.FirstAsync(c => c.Username == username);
         _dbContext.Channels.Remove(channel);
@@ -36,7 +36,7 @@ public class ChannelRepository : IChannelRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(long id)
+    public async Task RemoveAsync(long id)
     {
         DbModels.Channel channel = await _dbContext.Channels.FirstAsync(c => c.Id == id);
         _dbContext.Channels.Remove(channel);

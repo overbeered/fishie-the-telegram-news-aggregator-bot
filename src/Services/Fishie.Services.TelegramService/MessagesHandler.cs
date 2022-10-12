@@ -10,18 +10,23 @@ namespace Fishie.Services.TelegramService;
 /// <summary>
 /// Message Handler
 /// </summary>
-internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
+internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>, IDisposable
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMediator _mediator;
     private readonly Client _client;
     private readonly Dictionary<string, Command> _handlers;
+    private readonly IDisposableResource _disposableResource;
 
-    public MessagesHandler(IMediator mediator, IServiceScopeFactory serviceScopeFactory, Client client)
+    public MessagesHandler(IMediator mediator, 
+        IServiceScopeFactory serviceScopeFactory, 
+        Client client, 
+        IDisposableResource disposableResource)
     {
         _mediator = mediator;
         _serviceScopeFactory = serviceScopeFactory;
         _client = client;
+        _disposableResource = disposableResource;
         _handlers = new Dictionary<string, Command>()
             {
                 {AddAdminCommand.CommandText, new AddAdminCommand()},
@@ -57,7 +62,7 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
                     if (command == "commands")
                     {
                         action = " ";
-                        
+
                         foreach (var key in _handlers.Keys)
                         {
                             action += "\n" + key;
@@ -85,6 +90,11 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
         }
     }
 
+    /// <summary>
+    /// Sends a message to the chat
+    /// </summary>
+    /// <param name="chatId">Chat id</param>
+    /// <param name="message">Message</param>
     private async Task SendMessageAsync(long chatId, string message)
     {
         using var scope = _serviceScopeFactory.CreateScope();
@@ -99,8 +109,8 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
     /// Forward messages to chat
     /// </summary>
     /// <param name="channelId">Сhannel\chat id</param>
-    /// <param name="idMessage">Message id</param>
-    private async Task ForwardMessagesAsync(long channelId, int idMessage)
+    /// <param name="messageId">Message id</param>
+    private async Task ForwardMessagesAsync(long channelId, int messageId)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var forwardMessagesRepository = scope.ServiceProvider.GetRequiredService<IForwardMessagesRepository>();
@@ -119,10 +129,15 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>
 
                 await _client.Messages_ForwardMessages(
                     new InputChannel(channel!.Id, channel.AccessHash),
-                    new int[] { idMessage },
+                    new int[] { messageId },
                     new long[] { Random.Shared.Next(int.MinValue, int.MaxValue) },
                     new InputChannel(chat!.Id, chat.AccessHash));
             }
         }
+    }
+
+    public void Dispose()
+    {
+        _disposableResource.Dispose();
     }
 }

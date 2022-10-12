@@ -18,12 +18,12 @@ public class ForwardMessages
     public long ChannelId { get; set; }
 
     /// <summary>
-    /// 
+    /// Chat model relationship "one to many"
     /// </summary>
     public Chat Chat { get; set; }
 
     /// <summary>
-    /// 
+    /// Channel model relationship "one to many"
     /// </summary>
     public Channel Channel { get; set; }
 

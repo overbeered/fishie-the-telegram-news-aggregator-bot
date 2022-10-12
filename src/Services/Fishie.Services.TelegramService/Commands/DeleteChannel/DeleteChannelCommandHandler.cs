@@ -48,7 +48,7 @@ internal class DeleteChannelCommandHandler : AsyncRequestHandler<DeleteChannelCo
 
             if (channel != null)
             {
-                await channelRepository.DeleteAsync(request.Action);
+                await channelRepository.RemoveAsync(request.Action);
 
                 answer = $"The channel {request.Action} has been deleted";
             }

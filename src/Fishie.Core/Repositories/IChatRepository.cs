@@ -3,55 +3,53 @@
 namespace Fishie.Core.Repositories;
 
 /// <summary>
-/// Defines chat repository interface.
+/// Defines chat repository interface
 /// </summary>
 public interface IChatRepository
 {
     /// <summary>
-    /// Adds a chat
+    /// Adds an chat
     /// </summary>
-    /// <param name="chat">Chat</param>
-    /// <exception>The chat is already stored in the database</exception>
+    /// <param name="chat">Telegram chat model</param>
+    /// <returns></returns>
     Task AddAsync(Chat chat);
 
     /// <summary>
-    /// Returns chats
+    /// Returns a list of all chat
     /// </summary>
-    /// <returns>If it finds it, it will return a Chat list, if not, a null list</returns>
+    /// <returns>List of chat</returns>
     Task<List<Chat?>> FindAllAsync();
 
     /// <summary>
-    /// Returns the chat by name
+    /// Finds the chat by name
     /// </summary>
     /// <param name="chatName">Chat name</param>
-    /// <returns>If it finds it, it will return - Chat, if not - null</returns>
+    /// <returns>Telegram chat model</returns>
     Task<Chat?> FindAsync(string chatName);
 
     /// <summary>
-    /// Returns the chat by id
+    /// Finds the chat by identifier
     /// </summary>
-    /// <param name="id">Chat id</param>
-    /// <returns>If it finds it, it will return - Chat, if not - null</returns>
+    /// <param name="id">Identifier</param>
+    /// <returns>Telegram chat model</returns>
     Task<Chat?> FindAsync(long id);
 
     /// <summary>
-    /// Deletes a chat by name
+    /// Removes the chat by name
     /// </summary>
     /// <param name="chatName">Chat name</param>
-    /// <exception>Does not find a chat with this name in the database</exception>
-    Task DeleteAsync(string chatName);
+    Task RemoveAsync(string chatName);
 
     /// <summary>
-    /// Deletes a chat by id
+    /// Removes the chat by identifier
     /// </summary>
-    /// <param name="id">Chat id</param>
-    /// <exception>Does not find a chat with this id in the database</exception>
-    Task DeleteAsync(long id);
+    /// <param name="id">Identifier</param>
+    Task RemoveAsync(long id);
 
     /// <summary>
-    /// Checking availability chat
+    /// Checks whether the chat exists
     /// </summary>
-    /// <param name="chat">Chat</param>
-    /// <returns>Returns true if at least one element of the database is defined by the condition</returns>
+    /// <param name="chat">Telegram chat model</param>
+    /// <returns>True - exists, false - does not exist</returns>
     Task<bool> ExistsAsync(Chat chat);
 }

@@ -27,10 +27,11 @@ public class AdminRepository : IAdminRepository
         return await _dbContext.Admins.AsNoTracking().AnyAsync(a => a.Id == id);
     }
 
-    public async Task DeleteUsernameAsync(string username)
+    public async Task RemoveAsync(string username)
     {
         DbModels.Admin admin = await _dbContext.Admins.FirstAsync(a => a.Username == username);
         _dbContext.Admins.Remove(admin);
+
         await _dbContext.SaveChangesAsync();
     }
 

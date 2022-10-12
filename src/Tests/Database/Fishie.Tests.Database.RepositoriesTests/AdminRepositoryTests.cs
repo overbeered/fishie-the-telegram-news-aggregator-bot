@@ -1,9 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Database.Context;
-using Fishie.Database.Repositories;
-using Microsoft.EntityFrameworkCore;
-
-namespace Fishie.Tests.Database.RepositoriesTests;
+﻿namespace Fishie.Tests.Database.RepositoriesTests;
 
 public class AdminRepositoryTests
 {
@@ -21,7 +16,7 @@ public class AdminRepositoryTests
     {
         // Arrange & Act
         var result = await _adminRepository.ExistsAsync(9999);
-
+        
         // Assert
         Assert.True(!result);
     }
@@ -49,7 +44,7 @@ public class AdminRepositoryTests
 
         // Act
         var resultTrue = await _adminRepository.ExistsAsync(admin.Id);
-        await _adminRepository.DeleteUsernameAsync(admin.Username!);
+        await _adminRepository.RemoveAsync(admin.Username!);
         var resultFalse = await _adminRepository.ExistsAsync(admin.Id);
 
         // Assert

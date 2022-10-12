@@ -9,12 +9,16 @@ using CoreModels = Fishie.Core.Models;
 
 namespace Fishie.Services.TelegramService.Configuration;
 
+/// <summary>
+/// Chat configuration, search and adding to the database
+/// </summary>
 internal class ChatConfigurationHandler : INotificationHandler<ConfigurationNotification>
 {
     private readonly ILogger<ChatConfigurationHandler> _logger;
     private readonly ChatConfiguration _chatConfiguration;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly Client _client;
+
     public ChatConfigurationHandler(ILogger<ChatConfigurationHandler> logger,
         ChatConfiguration chatConfiguration,
         IServiceScopeFactory serviceScopeFactory,
@@ -31,9 +35,10 @@ internal class ChatConfigurationHandler : INotificationHandler<ConfigurationNoti
         try
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            IChatRepository chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
+            var chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
 
             var search = await _client.Contacts_Search(_chatConfiguration.ChatName);
+           
             if (search == null) throw new Exception($"channel {search} not found");
 
             foreach (var (_, chat) in search.chats)

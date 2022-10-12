@@ -50,7 +50,7 @@ internal class DeleteChannelForwardCommandHandler : AsyncRequestHandler<DeleteCh
 
             if (channel != null)
             {
-                await forwardMessagesRepository.DeleteAsync(new ForwardMessages(channel.Id, request.ChatId!.Value));
+                await forwardMessagesRepository.RemoveAsync(new ForwardMessages(channel.Id, request.ChatId!.Value));
 
                 answer = $"The channel {request.Action} was removed from tracking";
             }

@@ -1,9 +1,4 @@
-﻿using Fishie.Core.Models;
-using Fishie.Database.Context;
-using Fishie.Database.Repositories;
-using Microsoft.EntityFrameworkCore;
-
-namespace Fishie.Tests.Database.RepositoriesTests;
+﻿namespace Fishie.Tests.Database.RepositoriesTests;
 
 public class ForwardRepositoryLinkTests
 {
@@ -54,7 +49,7 @@ public class ForwardRepositoryLinkTests
         var resultChatTrue = await _chatRepository.ExistsAsync(chat1);
         var resultForwardChatTrue = await _forwardMessagesRepository.ChatIdExistsAsync(chat1.Id);
 
-        await _chatRepository.DeleteAsync(chat1.Id);
+        await _chatRepository.RemoveAsync(chat1.Id);
 
         var resultChatFalse = await _chatRepository.ExistsAsync(chat1);
         var resultForwardChatFalse = await _forwardMessagesRepository.ChatIdExistsAsync(chat1.Id);
@@ -98,7 +93,7 @@ public class ForwardRepositoryLinkTests
         var resultChannelTrue = await _channelRepository.ExistsAsync(channel1);
         var resultForwardChannelTrue = await _forwardMessagesRepository.ChannelIdExistsAsync(channel1.Id);
 
-        await _channelRepository.DeleteAsync(channel1.Id);
+        await _channelRepository.RemoveAsync(channel1.Id);
 
         var resultChannelFalse = await _channelRepository.ExistsAsync(channel1);
         var resultForwardChannelFalse = await _forwardMessagesRepository.ChannelIdExistsAsync(channel1.Id);

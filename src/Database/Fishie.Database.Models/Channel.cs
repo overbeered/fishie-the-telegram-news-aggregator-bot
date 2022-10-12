@@ -1,7 +1,7 @@
 ﻿namespace Fishie.Database.Models;
 
 /// <summary>
-/// Сhannel model for the database
+/// The channel model for the database
 /// </summary>
 public class Channel
 {
@@ -25,6 +25,9 @@ public class Channel
     /// </summary>
     public long AccessHash { get; set; }
 
+    /// <summary>
+    /// The relationship of the collection "one to many"
+    /// </summary>
     public ICollection<ForwardMessages> ForwardMessages { get; set; }
 
 #nullable disable

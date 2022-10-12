@@ -23,7 +23,7 @@ public class ForwardMessagesRepository : IForwardMessagesRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(CoreModels.ForwardMessages forwardMessages)
+    public async Task RemoveAsync(CoreModels.ForwardMessages forwardMessages)
     {
 
         DbModels.ForwardMessages model = await _dbContext.ForwardMessages
@@ -33,7 +33,7 @@ public class ForwardMessagesRepository : IForwardMessagesRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteChannelIdAsync(long channnelId)
+    public async Task RemoveChannelIdAsync(long channnelId)
     {
         var channnes = _dbContext.ForwardMessages.Where(c => c.ChannelId == channnelId);
         _dbContext.ForwardMessages.RemoveRange(channnes);
@@ -41,7 +41,7 @@ public class ForwardMessagesRepository : IForwardMessagesRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteChatIdAsync(long chatId)
+    public async Task RemoveChatIdAsync(long chatId)
     {
         var chats = _dbContext.ForwardMessages.Where(c => c.ChatId == chatId);
         _dbContext.ForwardMessages.RemoveRange(chats);

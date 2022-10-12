@@ -5,7 +5,13 @@
 /// </summary>
 internal abstract class Command
 {
+    /// <summary>
+    /// Chat id
+    /// </summary>
     public long? ChatId { get; set; }
-    public string? Action { get; set; }
 
+    /// <summary>
+    /// Action
+    /// </summary>
+    public string? Action { get; set; }
 }

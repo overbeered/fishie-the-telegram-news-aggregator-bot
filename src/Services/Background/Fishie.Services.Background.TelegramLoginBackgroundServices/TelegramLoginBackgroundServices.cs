@@ -37,6 +37,7 @@ public class TelegramLoginBackgroundServices : IHostedService
     {
         _telegramServices.Reset();
         _logger.LogInformation("Services: {ServicesName}. Client Reset", nameof(TelegramLoginBackgroundServices));
+        
         return Task.CompletedTask;
     }
 }

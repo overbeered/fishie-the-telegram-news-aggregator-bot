@@ -6,7 +6,7 @@
 public class Admin
 {
     /// <summary>
-    ///  Telegram user Id
+    /// Telegram user Id
     /// </summary>
     public long Id { get; private set; }
 
@@ -16,7 +16,7 @@ public class Admin
     public string? FirstName { get; private set; }
 
     /// <summary>
-    /// Telegram user Last name
+    /// Telegram user last name
     /// </summary>
     public string? LastName { get; private set; }
 
