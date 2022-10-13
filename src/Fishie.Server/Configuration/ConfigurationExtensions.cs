@@ -6,14 +6,20 @@ namespace Fishie.Server.Configuration;
 
 internal static class ConfigurationExtensions
 {
+    /// <summary>
+    /// Adds the DB context from the configuration
+    /// </summary>
     public static void AddDbConfiugration(this IServiceCollection services, IConfiguration configuration)
     {
         var connection = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                        configuration.GetConnectionString("DefaultConnection");
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         services.AddDbContext<NpgSqlContext>(options => options.UseNpgsql(connection));
-
-        services.AddTransient(_ => connection);
     }
+
+    /// <summary>
+    /// Adds the AdminConfiguration dependency from the configuration
+    /// </summary>
     public static void AddAdminConfiugration(this IServiceCollection services, IConfiguration configuration)
     {
         var admin = configuration.GetSection("AdminConfiguration").Get<AdminConfiguration>();
@@ -21,6 +27,9 @@ internal static class ConfigurationExtensions
         services.AddTransient(_ => admin);
     }
 
+    /// <summary>
+    /// Adds the ChatConfiguration dependency from the configuration
+    /// </summary>
     public static void AddChatConfiugration(this IServiceCollection services, IConfiguration configuration)
     {
         var chat = configuration.GetSection("ChatConfiguration").Get<ChatConfiguration>();

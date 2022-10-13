@@ -4,38 +4,30 @@ The application uses the client library [WTelegramClient](https://github.com/wiz
 
 ## Configuration telegram
 
-Configuration of the application to connect to telegram file **..\src\Fishie.Server\Configuration\ConfigTelegram.cs**
-
-```C#
-    public static string? Config(string what)
-    {
-        switch (what)
-        {
-            case "api_id": return "123";
-            case "api_hash": return "123";
-            case "phone_number": return "";
-            case "verification_code": Console.Write("Code: "); return Console.ReadLine()!;
-            case "first_name": return "Overbeered";
-            case "last_name": return "Overbeered";
-            case "password": return "";
-            default: return null;
-        }
-    }
-```
 Default configuration file **..\src\Fishie.Server\appsettings.json**
+
+Configuration of the application to connect to telegram
+```json
+"api_id": "123",
+"api_hash": "123",
+"phone_number": "+78005553535",
+"first_name": "Overbeered",
+"last_name": "Overbeered",
+"password": "Overbeered",
+```
 
 Default chat configuration for command processing
 ```json
-  "ChatConfiguration": {
-    "ChatName": "ChatName"
-  }
+"ChatConfiguration": {
+  "ChatName": "ChatName"
+}
 ```
 
 Configuration of the default administrator who can send commands
 ```json
-  "AdminConfiguration": {
-    "Username": "Admin"
-  }
+"AdminConfiguration": {
+  "Username": "Admin"
+}
 ```
 
 # How teams work?

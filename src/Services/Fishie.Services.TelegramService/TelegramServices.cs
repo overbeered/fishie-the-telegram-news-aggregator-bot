@@ -20,6 +20,7 @@ public class TelegramServices : ITelegramServices
         IMediator mediator)
     {
         _logger = logger;
+        Helpers.Log = (lvl, str) => _logger.Log((LogLevel)lvl, message: str);
         _client = client;
         _mediator = mediator;
         _client.OnUpdate += OnUpdates;
