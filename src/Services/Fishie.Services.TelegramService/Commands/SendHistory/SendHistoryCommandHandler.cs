@@ -70,9 +70,9 @@ internal class SendHistoryCommandHandler : AsyncRequestHandler<SendHistoryComman
                 foreach (var idMessage in messagesIdList)
                 {
                     await _client.Messages_ForwardMessages(new InputChannel(channel.Id, channel.AccessHash),
-                    new int[] { idMessage },
-                    new long[] { Random.Shared.Next(int.MinValue, int.MaxValue) },
-                    new InputChannel(chat!.Id, chat.AccessHash));
+                        new int[] { idMessage },
+                        new long[] { Random.Shared.Next(int.MinValue, int.MaxValue) },
+                        new InputChannel(chat!.Id, chat.AccessHash));
                 }
             }
         }

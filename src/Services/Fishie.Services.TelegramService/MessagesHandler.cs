@@ -18,9 +18,9 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>, IDisposab
     private readonly Dictionary<string, Command> _handlers;
     private readonly IDisposableResource _disposableResource;
 
-    public MessagesHandler(IMediator mediator, 
-        IServiceScopeFactory serviceScopeFactory, 
-        Client client, 
+    public MessagesHandler(IMediator mediator,
+        IServiceScopeFactory serviceScopeFactory,
+        Client client,
         IDisposableResource disposableResource)
     {
         _mediator = mediator;
@@ -48,35 +48,32 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>, IDisposab
     {
         try
         {
-            if (request.Message!.IndexOf("/") == 0)
+            using var scope = _serviceScopeFactory.CreateScope();
+            var adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+
+            if (request.Message!.IndexOf("/") == 0 && await adminRepository.ExistsAsync(request.UserId!.Value))
             {
-                using var scope = _serviceScopeFactory.CreateScope();
-                var adminRepository = scope.ServiceProvider.GetRequiredService<IAdminRepository>();
+                string message = request.Message!.Remove(0, 1);
+                string command = message.IndexOf(" ") != -1 ? message.Remove(message.IndexOf(" ")) : message;
+                string? action = command != message ? message.Remove(0, message.IndexOf(" ") + 1) : null;
 
-                if (await adminRepository.ExistsAsync(request.UserId!.Value))
+                if (command == "commands")
                 {
-                    string message = request.Message!.Remove(0, 1);
-                    string command = message.IndexOf(" ") != -1 ? message.Remove(message.IndexOf(" ")) : message;
-                    string? action = command != message ? message.Remove(0, message.IndexOf(" ") + 1) : null;
+                    action = " ";
 
-                    if (command == "commands")
+                    foreach (var key in _handlers.Keys)
                     {
-                        action = " ";
-
-                        foreach (var key in _handlers.Keys)
-                        {
-                            action += "\n" + key;
-                        }
-
-                        await SendMessageAsync(request.ChatId!.Value, action);
+                        action += "\n" + key;
                     }
-                    else
-                    {
-                        _handlers[command].ChatId = request.ChatId;
-                        _handlers[command].Action = action;
 
-                        await _mediator.Send(_handlers[command], cancellationToken);
-                    }
+                    await SendMessageAsync(request.ChatId!.Value, action);
+                }
+                else
+                {
+                    _handlers[command].ChatId = request.ChatId;
+                    _handlers[command].Action = action;
+
+                    await _mediator.Send(_handlers[command], cancellationToken);
                 }
             }
             else
@@ -127,8 +124,7 @@ internal class MessagesHandler : AsyncRequestHandler<MessagesRequest>, IDisposab
             {
                 var chat = await chatRepository.FindAsync(forwardMessages!.ChatId);
 
-                await _client.Messages_ForwardMessages(
-                    new InputChannel(channel!.Id, channel.AccessHash),
+                await _client.Messages_ForwardMessages(new InputChannel(channel!.Id, channel.AccessHash),
                     new int[] { messageId },
                     new long[] { Random.Shared.Next(int.MinValue, int.MaxValue) },
                     new InputChannel(chat!.Id, chat.AccessHash));
